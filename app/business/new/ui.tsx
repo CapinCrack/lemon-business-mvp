@@ -1,7 +1,6 @@
 // app/business/new/ui.tsx
 'use client';
 
-import { supabase } from '@/app/supabaseClient';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -20,26 +19,24 @@ export default function NewBusinessForm() {
     setLoading(true);
     setErrorMessage('');
 
-    // Insert the new row into the businesses table
-    const { data, error } = await supabase
-      .from('businesses')
-      .insert({
-        name,
-        category,
-        subcategory,
-        neighborhood,
-        price_range: priceRange,
-        photo_urls: [], // Initializes empty array so it doesn't break image maps later
-      })
-      .select('id')
-      .single();
+    try {
+      const res = await fetch('/api/businesses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, category, subcategory, neighborhood, priceRange }),
+      });
 
-    setLoading(false);
+      const json = await res.json();
 
-    if (error) {
-      setErrorMessage(error.message);
-    } else if (data) {
-      setCreatedId(data.id);
+      if (!res.ok) {
+        setErrorMessage(json.error || 'Failed to create listing.');
+      } else {
+        setCreatedId(json.id);
+      }
+    } catch (err: any) {
+      setErrorMessage(err?.message || 'Unexpected error occurred.');
+    } finally {
+      setLoading(false);
     }
   };
 

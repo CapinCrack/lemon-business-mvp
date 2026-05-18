@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { supabase } from "./supabaseClient"; 
+import { supabase } from "./supabaseClient";
+import ClaimModal from "./components/ClaimModal";
 
 interface Business {
   id: string;
@@ -19,14 +20,7 @@ export default function Home() {
   const [hasSearched, setHasSearched] = useState(false);
   const router = useRouter();
 
-  // --- Modal States ---
-  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  
-  // Form submission tracking states
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [claimSuccess, setClaimSuccess] = useState(false);
-  const [priceRange, setPriceRange] = useState('$$-$$$');
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -53,23 +47,6 @@ export default function Home() {
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
-  // Mock submit handler for drafts/verifications
-  const handleModalSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate API call - Sprint 2 will wire this to real user IDs
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setClaimSuccess(true);
-    }, 1200);
-  };
-
-  const closeModals = () => {
-    setSelectedBusiness(null);
-    setShowAddModal(false);
-    setClaimSuccess(false);
-  };
 
   return (
     <main className="min-h-screen bg-neutral-900 text-white flex flex-col justify-between relative">
@@ -189,125 +166,12 @@ export default function Home() {
         &copy; {new Date().getFullYear()} Lemon Miami. All rights reserved.
       </footer>
 
-      {/* ========================================================= */}
-      {/* MODAL LIGHTBOX OVERLAY (Renders when either modal is open) */}
-      {/* ========================================================= */}
-      {(selectedBusiness || showAddModal) && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all animate-fadeIn">
-          <div className="bg-neutral-800 border border-neutral-700 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative p-6 text-left">
-            
-            {/* Close Button */}
-            <button 
-              onClick={closeModals}
-              className="absolute top-4 right-4 text-neutral-400 hover:text-white transition text-xl font-bold"
-            >
-              &times;
-            </button>
-
-            {claimSuccess ? (
-              /* Global Success Screen */
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-amber-400/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                  ✓
-                </div>
-                <h3 className="text-2xl font-black text-white">Application Received!</h3>
-                <p className="text-neutral-400 text-sm mt-2 max-w-xs mx-auto">
-                  We're initializing your listing verification. Next up, we need to secure your identity.
-                </p>
-                <button
-                  onClick={closeModals}
-                  className="mt-6 w-full py-3 bg-amber-400 text-black font-bold rounded-xl hover:bg-amber-300 transition"
-                >
-                  Awesome
-                </button>
-              </div>
-            ) : selectedBusiness ? (
-              /* PATH A MODAL: Claiming Existing Business */
-              <form onSubmit={handleModalSubmit}>
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-wider bg-amber-400/10 px-2.5 py-1 rounded-md">
-                  Path A: Verification
-                </span>
-                <h2 className="text-2xl font-black mt-3 text-white">Claim "{selectedBusiness.name}"</h2>
-                <p className="text-neutral-400 text-sm mt-1">
-                  Located in <span className="text-white font-medium">{selectedBusiness.neighborhood}</span> ({selectedBusiness.category}).
-                </p>
-
-                <div className="mt-6 space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-neutral-400 mb-1">Your Full Name</label>
-                    <input required type="text" className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400" placeholder="John Doe" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-neutral-400 mb-1">Business Contact Email</label>
-                    <input required type="email" className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400" placeholder="john@company.com" />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="mt-6 w-full py-3 bg-amber-400 text-black font-bold rounded-xl hover:bg-amber-300 transition flex items-center justify-center disabled:opacity-50"
-                >
-                  {isSubmitting ? "Processing Request..." : "Claim This Profile →"}
-                </button>
-              </form>
-            ) : (
-              /* PATH B MODAL: Adding a Missing Business */
-              <form onSubmit={handleModalSubmit}>
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-wider bg-amber-400/10 px-2.5 py-1 rounded-md">
-                  Path B: New Listing
-                </span>
-                <h2 className="text-2xl font-black mt-3 text-white">Add Your Business</h2>
-                <p className="text-neutral-400 text-sm mt-1">
-                  Get discovered by thousands of Miami locals completely free.
-                </p>
-
-                <div className="mt-6 space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-neutral-400 mb-1">Business Name</label>
-                    <input required type="text" defaultValue={searchTerm} className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400" placeholder="e.g. Wynwood Gym Collective" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-neutral-400 mb-1">Category</label>
-                      <input required type="text" className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400" placeholder="e.g. Fitness" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-neutral-400 mb-1">Miami Neighborhood</label>
-                      <input required type="text" className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400" placeholder="e.g. Brickell" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-neutral-400 mb-1">Price Range</label>
-                    <select
-                      value={priceRange}
-                      onChange={(e) => setPriceRange(e.target.value)}
-                      className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 appearance-none"
-                    >
-                      <option value="$">Low-Range ($)</option>
-                      <option value="$$-$$$">Mid-Range ($$-$$$)</option>
-                      <option value="$$$$">High-Range ($$$$)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold uppercase text-neutral-400 mb-1">Contact Email</label>
-                    <input required type="email" className="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400" placeholder="owner@mybusiness.com" />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="mt-6 w-full py-3 bg-amber-400 text-black font-bold rounded-xl hover:bg-amber-300 transition flex items-center justify-center disabled:opacity-50"
-                >
-                  {isSubmitting ? "Creating Profile..." : "Submit Listing →"}
-                </button>
-              </form>
-            )}
-
-          </div>
-        </div>
-      )}
+      <ClaimModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        mode="add"
+        business={null}
+      />
 
     </main>
   );

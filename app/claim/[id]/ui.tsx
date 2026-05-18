@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function ClaimForm({ business }: any) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -23,6 +24,7 @@ export default function ClaimForm({ business }: any) {
           businessId: business.id,
           ownerFullName: name,
           ownerEmail: email,
+          ownerPhone: phone || null,
         }),
       });
 
@@ -77,6 +79,13 @@ export default function ClaimForm({ business }: any) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+        />
+
+        <input
+          className="w-full p-3 rounded-xl bg-neutral-800"
+          placeholder="Phone (optional)"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
         />
 
         <button
