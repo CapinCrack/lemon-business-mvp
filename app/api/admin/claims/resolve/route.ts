@@ -25,25 +25,30 @@ export async function POST(req: Request) {
     if (claimError) throw claimError;
 
     if (action === 'approved' && claim.business_id) {
-      await supabase
+      const { error: bizError } = await supabase
         .from('businesses')
-        .update({ owner_id: claim.user_id, claimed: true })
+        .update({ owner_id: claim.user_id, claimed: true, is_verified: true })
         .eq('id', claim.business_id);
+      if (bizError) console.error('[admin/resolve] Business update failed:', bizError);
     }
 
     if (action === 'approved' && !claim.business_id && claim.custom_business_name) {
-      await supabase.from('businesses').insert({
+      const { error: insertError } = await supabase.from('businesses').insert({
         name: claim.custom_business_name,
         category: claim.custom_business_category,
         owner_id: claim.user_id,
         claimed: true,
+        is_verified: true,
       });
+      if (insertError) console.error('[admin/resolve] Business insert failed:', insertError);
     }
 
     // Notify the claimant of the decision
-    notifyClaimantOfDecision(claim.owner_email, claim.owner_full_name, action).catch((err) =>
-      console.error('[admin/resolve] Claimant notification failed:', err)
-    );
+    try {
+      await notifyClaimantOfDecision(claim.owner_email, claim.owner_full_name, action);
+    } catch (err) {
+      console.error('[admin/resolve] Claimant notification failed:', err);
+    }
 
     return NextResponse.json({ success: true });
   } catch (err: any) {

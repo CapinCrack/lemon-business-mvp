@@ -1,5 +1,5 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const FROM_ADDRESS = process.env.EMAIL_FROM ?? 'Lemon Miami <noreply@lemonmiami.com>';
+const FROM_ADDRESS = 'Lemon Miami <onboarding@resend.dev>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@lemonmiami.com';
 
 interface EmailPayload {
