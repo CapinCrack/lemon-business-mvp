@@ -1,90 +1,105 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import BusinessSearch from "./components/BusinessSearch";
 import ClaimModal from "./components/ClaimModal";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const CATEGORIES = [
-  { label: "Food & Drink", icon: "🍽️", count: "340+" },
-  { label: "Beauty & Wellness", icon: "💆", count: "210+" },
-  { label: "Home Services", icon: "🔧", count: "185+" },
-  { label: "Auto & Transport", icon: "🚗", count: "120+" },
-  { label: "Legal & Finance", icon: "⚖️", count: "95+" },
-  { label: "Fitness & Health", icon: "💪", count: "160+" },
-  { label: "Real Estate", icon: "🏠", count: "75+" },
-  { label: "Events & Music", icon: "🎵", count: "130+" },
-];
-
-const STEPS = [
-  {
-    n: "01",
-    title: "Search your business",
-    body: "Type your business name into the search bar. We pull live data from the Miami business registry.",
-  },
-  {
-    n: "02",
-    title: "Submit your claim",
-    body: "Fill in a short form with your contact details. No documents required — takes under two minutes.",
-  },
-  {
-    n: "03",
-    title: "Get verified & go live",
-    body: "Our team reviews your request within 1–2 business days. Once approved, your profile is fully yours.",
-  },
+  { label: "Food & Drinks", emoji: "🍽️" },
+  { label: "Beauty", emoji: "💄" },
+  { label: "Fitness & Wellness", emoji: "💪" },
+  { label: "Home Improvement", emoji: "🔧" },
+  { label: "Time Savers", emoji: "⚡" },
+  { label: "Pets", emoji: "🐾" },
+  { label: "Events", emoji: "🎉" },
+  { label: "Auto", emoji: "🚗" },
+  { label: "Activities & Experiences", emoji: "🎯" },
+  { label: "Other", emoji: "✨" },
 ];
 
 const VALUE_PROPS = [
-  { icon: "📍", title: "Be found locally", body: "Miami locals search Lemon before Google Maps. Show up where it matters." },
-  { icon: "✅", title: "Verified badge", body: "A trusted badge signals legitimacy and drives more clicks from cautious buyers." },
-  { icon: "📊", title: "Analytics dashboard", body: "See profile views, click-throughs, and search impressions in one clean panel." },
-  { icon: "📅", title: "Direct booking", body: "Accept appointments straight from your Lemon profile — no third-party fees." },
-  { icon: "🔔", title: "Customer alerts", body: "Get notified the moment a customer engages with your listing." },
-  { icon: "🏙️", title: "Miami-first audience", body: "Every visitor is searching for local services — not national chains." },
+  {
+    icon: "👥",
+    title: "Customers who already trust you",
+    body: "People find you through friends, not ads. When someone books you on Lemon, they already saw that someone they trust loved your work.",
+  },
+  {
+    icon: "⚡",
+    title: "Set up in minutes",
+    body: "Your business is already on Lemon. Claim it, add your photos and services, and start getting booked. No complicated onboarding.",
+  },
+  {
+    icon: "💛",
+    title: "Simple, honest pricing",
+    body: "Start with a 30-day free trial — no charge today. After that, plans start at $29/month, billed quarterly or yearly. No per-booking fees, no surprises. Cancel anytime before your trial ends.",
+  },
 ];
 
-const RECENT_CLAIMS = [
-  { name: "Brickell Cafe", owner: "Carlos R.", neighborhood: "Brickell", ago: "2h ago", category: "Food & Drink" },
-  { name: "SunGlow Beauty Studio", owner: "Mariana L.", neighborhood: "Wynwood", ago: "5h ago", category: "Beauty" },
-  { name: "ProFix Plumbing", owner: "James T.", neighborhood: "Doral", ago: "9h ago", category: "Home Services" },
-  { name: "Coral Legal Group", owner: "Priya M.", neighborhood: "Coral Gables", ago: "1d ago", category: "Legal" },
-  { name: "Iron District Gym", owner: "Andre S.", neighborhood: "Little Haiti", ago: "1d ago", category: "Fitness" },
+const SHOWCASE = [
+  {
+    name: "La Mar by Gastón Acurio",
+    category: "Restaurant",
+    neighborhood: "Brickell",
+    price: "$$$$",
+    rating: 9.2,
+    reviews: 847,
+    photo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=300&fit=crop",
+    photo2: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=300&h=300&fit=crop",
+  },
+  {
+    name: "Wynwood Ink",
+    category: "Tattoo & Piercing",
+    neighborhood: "Wynwood",
+    price: "$$$",
+    rating: 9.6,
+    reviews: 412,
+    photo: "https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?w=600&h=300&fit=crop",
+    photo2: "https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?w=300&h=300&fit=crop",
+  },
+  {
+    name: "Barry's Miami Beach",
+    category: "Fitness Studio",
+    neighborhood: "South Beach",
+    price: "$$",
+    rating: 9.4,
+    reviews: 631,
+    photo: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=300&fit=crop",
+    photo2: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=300&h=300&fit=crop",
+  },
 ];
 
 const FAQS = [
   {
-    q: "Is it really free to claim my business?",
-    a: "Yes. The basic claim and listing are completely free, forever. The Verified Partner tier is optional and adds premium features like booking integration and priority placement.",
+    q: "How do customers find me?",
+    a: "Lemon surfaces your business to Miami locals searching in your category. More importantly, when someone has a great experience with you, Lemon shows that reaction to their friends — turning one happy customer into ten new ones.",
   },
   {
-    q: "How long does the review process take?",
-    a: "Most claims are reviewed within 1–2 business days. You'll receive an email as soon as a decision is made.",
+    q: "What's the reaction system?",
+    a: "Instead of written reviews, customers leave one-tap emoji reactions after visiting your business. The volume of reactions generates a score out of 10 that actually means something — no fake five-star paragraphs, just honest signals from real customers.",
   },
   {
-    q: "What if my business isn't in the directory yet?",
-    a: "Use the 'Add a Business' option. You can create a new listing from scratch — it takes under two minutes and is immediately searchable once submitted.",
+    q: "What happens when my free trial ends?",
+    a: "We'll remind you before your 30-day trial ends, and you choose whether to continue. Cancel anytime before then and you're never charged.",
   },
   {
-    q: "Can I edit my profile after claiming?",
-    a: "Absolutely. Once your claim is approved, you get full access to your owner dashboard where you can update your hours, phone number, neighborhood, and more.",
+    q: "Can I control my profile?",
+    a: "Absolutely. Once verified, you control everything — photos, hours, services, pricing, and more. You can also message customers directly and manage bookings from your dashboard.",
   },
   {
-    q: "What is the Verified Partner badge?",
-    a: "Verified Partners receive a prominent badge on their profile, priority placement in search results, booking integration, and access to the analytics panel. It signals trust to customers and increases clicks.",
-  },
-  {
-    q: "What happens if someone else already claimed my business?",
-    a: "Contact us at support@lemonmiami.com and we'll investigate. We have a dispute resolution process to ensure rightful owners get access.",
+    q: "How is this different from Yelp or Google?",
+    a: "Yelp and Google are search engines. Lemon is a social network. When your customer loves you, their entire friend group sees it — without you spending a dollar on ads. The discovery is built into how people use the app, not bolted on.",
   },
 ];
 
-// ─── Components ──────────────────────────────────────────────────────────────
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-zinc-200">
+    <div className="border-b border-zinc-200 last:border-0">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between gap-4 py-5 text-left text-sm font-semibold text-zinc-900 hover:text-amber-500 transition-colors"
@@ -96,9 +111,95 @@ function FaqItem({ q, a }: { q: string; a: string }) {
           </svg>
         </span>
       </button>
-      {open && (
-        <p className="pb-5 text-sm text-zinc-500 leading-relaxed pr-8">{a}</p>
-      )}
+      {open && <p className="pb-5 text-sm text-zinc-500 leading-relaxed pr-8">{a}</p>}
+    </div>
+  );
+}
+
+function LiveCounter() {
+  const [count, setCount] = useState(1247);
+  useEffect(() => {
+    const id = setInterval(
+      () => setCount((c) => c + Math.floor(Math.random() * 3 + 1)),
+      4000
+    );
+    return () => clearInterval(id);
+  }, []);
+  return <>{count.toLocaleString()}</>;
+}
+
+function BusinessCard({ biz }: { biz: (typeof SHOWCASE)[0] }) {
+  return (
+    <div className="bg-white rounded-2xl overflow-hidden border border-zinc-100 shadow-sm">
+      <div className="flex h-40 gap-0.5">
+        <div className="flex-1 relative overflow-hidden">
+          <img src={biz.photo} alt={biz.name} className="w-full h-full object-cover" />
+          <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1.5 shadow-sm">
+            <span className="font-black text-xs text-zinc-900">{biz.rating}</span>
+            <span className="text-zinc-400 text-xs">({biz.reviews})</span>
+          </div>
+        </div>
+        <div className="w-24 overflow-hidden flex-shrink-0">
+          <img src={biz.photo2} alt="" className="w-full h-full object-cover" />
+        </div>
+      </div>
+      <div className="p-4">
+        <p className="font-black text-zinc-900 text-sm">{biz.name}</p>
+        <p className="text-xs text-zinc-400 mt-1">
+          {biz.category} · {biz.neighborhood} · {biz.price}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PhoneMockup() {
+  return (
+    <div className="relative mx-auto w-52 bg-zinc-800 rounded-[2rem] p-2 shadow-2xl ring-1 ring-white/10">
+      <div className="bg-white rounded-[1.5rem] overflow-hidden">
+        {/* Status bar */}
+        <div className="flex justify-between items-center px-5 pt-4 pb-1">
+          <span className="text-[10px] font-bold text-zinc-900">9:41</span>
+          <div className="w-4 h-1.5 bg-zinc-900 rounded-sm" />
+        </div>
+        {/* App wordmark */}
+        <div className="px-5 pb-3">
+          <span className="text-[13px] font-black text-zinc-900">🍋 Lemon</span>
+        </div>
+        {/* Friends section */}
+        <div className="px-5 pb-3">
+          <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Your friends love</p>
+          <div className="space-y-1.5">
+            {[
+              { name: "Brickell Cafe", emoji: "😍", note: "Maria & 2 others" },
+              { name: "SunGlow Beauty", emoji: "🔥", note: "Jake loves this" },
+            ].map((item) => (
+              <div key={item.name} className="flex items-center gap-2 bg-zinc-50 rounded-xl p-2">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-base flex-shrink-0">
+                  {item.emoji}
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-zinc-900">{item.name}</p>
+                  <p className="text-[9px] text-zinc-400">{item.note}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Business profile snippet */}
+        <div className="mx-5 mb-5 bg-amber-50 border border-amber-100 rounded-xl p-3">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[10px] font-black text-zinc-900">Your business</p>
+            <span className="text-[8px] bg-amber-400 text-black font-black px-1.5 py-0.5 rounded-full">LIVE</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-base">😍</span>
+            <span className="text-base">🔥</span>
+            <span className="text-base">👏</span>
+            <span className="text-[9px] text-zinc-400 ml-auto">284 reactions</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -106,187 +207,238 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [email, setEmail] = useState("");
-  const [waitlistDone, setWaitlistDone] = useState(false);
+  const [stickyVisible, setStickyVisible] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStickyVisible(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToSearch = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    const el = document.getElementById("hero-search");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => (el.querySelector("input") as HTMLInputElement | null)?.focus(), 600);
+  };
 
   return (
-    <main className="min-h-screen bg-white text-zinc-900">
+    <main className="min-h-screen bg-white text-zinc-900 overflow-x-hidden">
 
       {/* ── NAV ── */}
-      <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/90 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center font-black text-black text-lg shadow-sm">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-zinc-100">
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-400 flex items-center justify-center font-black text-black text-lg leading-none">
               L
             </div>
-            <span className="font-black text-lg tracking-tight text-zinc-900">Lemon</span>
-            <span className="hidden sm:block text-xs text-zinc-400 ml-1 font-medium tracking-wider uppercase">Miami</span>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-7 text-sm text-zinc-500">
-            <a href="#how-it-works" className="hover:text-zinc-900 transition-colors">How it Works</a>
-            <a href="#pricing" className="hover:text-zinc-900 transition-colors">Pricing</a>
-            <a href="#faq" className="hover:text-zinc-900 transition-colors">FAQ</a>
-          </nav>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-black text-lg tracking-tight text-zinc-900">Lemon</span>
+              <span className="text-[10px] font-black text-amber-500 tracking-widest uppercase leading-none">
+                for business
+              </span>
+            </div>
+          </Link>
 
           <button
-            onClick={() => setShowAddModal(true)}
-            className="px-4 py-2 rounded-lg bg-amber-400 text-black font-bold hover:bg-amber-300 transition text-sm shadow-sm"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+            className="w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-lg hover:bg-zinc-50 transition"
           >
-            List my business
+            <span className={`block w-5 h-0.5 bg-zinc-700 rounded-full transition-all duration-200 origin-center ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
+            <span className={`block w-5 h-0.5 bg-zinc-700 rounded-full transition-all duration-200 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block w-5 h-0.5 bg-zinc-700 rounded-full transition-all duration-200 origin-center ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
           </button>
         </div>
+
+        {menuOpen && (
+          <div className="border-t border-zinc-100 bg-white px-6 py-4 space-y-1">
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="block text-sm font-semibold text-zinc-700 hover:text-zinc-900 py-2.5 border-b border-zinc-100"
+            >
+              Sign in
+            </Link>
+            <button
+              onClick={() => { setShowAddModal(true); setMenuOpen(false); }}
+              className="block w-full text-left text-sm font-bold text-amber-500 py-2.5"
+            >
+              List my business →
+            </button>
+          </div>
+        )}
       </header>
 
       {/* ── 1. HERO ── */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-20">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-
-          {/* Left */}
-          <div>
-            <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-full px-4 py-1.5 text-xs font-semibold text-amber-600 tracking-wider uppercase mb-6">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-              Miami&apos;s Local Business Directory
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-[1.08] mb-5 text-zinc-900">
-              Your next customer is already{" "}
-              <span className="text-amber-400">looking for you.</span>
-            </h1>
-
-            <p className="text-zinc-500 text-base md:text-lg mb-8 leading-relaxed">
-              Claim your business free on Lemon — Miami&apos;s fastest-growing local
-              services directory. Be found by thousands of locals searching for
-              services just like yours.
-            </p>
-
-            <div id="search" className="mb-6">
-              <BusinessSearch />
-            </div>
-
-            <div className="flex items-center gap-6">
-              <div>
-                <p className="text-3xl font-black text-zinc-900">1,247</p>
-                <p className="text-xs text-zinc-400 mt-0.5">businesses on Lemon</p>
-              </div>
-              <div className="w-px h-10 bg-zinc-200" />
-              <div>
-                <p className="text-3xl font-black text-zinc-900">127</p>
-                <p className="text-xs text-zinc-400 mt-0.5">claims this month</p>
-              </div>
-              <div className="w-px h-10 bg-zinc-200" />
-              <div>
-                <p className="text-3xl font-black text-zinc-900">2 min</p>
-                <p className="text-xs text-zinc-400 mt-0.5">to go live</p>
-              </div>
-            </div>
-
-            <p className="text-zinc-400 text-xs mt-6">
-              Free to list &bull; No credit card required &bull; Set up in 2 minutes
-            </p>
+      <section
+        id="hero"
+        ref={heroRef}
+        className="relative bg-gradient-to-b from-amber-50 via-amber-50/50 to-white pt-20 pb-28 px-6 text-center"
+      >
+        <div className="max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-white border border-amber-200 rounded-full px-4 py-1.5 text-xs font-semibold text-amber-600 tracking-wide mb-8 shadow-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+            For Miami service businesses
           </div>
 
-          {/* Right — visual mockup */}
-          <div className="hidden md:flex flex-col gap-3">
-            {/* Simulated business listing cards */}
-            {[
-              { name: "Brickell Cafe", cat: "Food & Drink", rating: "4.9", reviews: 142, verified: true },
-              { name: "SunGlow Beauty Studio", cat: "Beauty & Wellness", rating: "4.8", reviews: 87, verified: true },
-              { name: "ProFix Plumbing", cat: "Home Services", rating: "4.7", reviews: 53, verified: false },
-            ].map((biz) => (
-              <div key={biz.name} className="bg-white border border-zinc-200 rounded-2xl p-4 shadow-sm flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center font-black text-amber-500 text-lg flex-shrink-0">
-                  {biz.name[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold text-sm text-zinc-900 truncate">{biz.name}</p>
-                    {biz.verified && (
-                      <span className="flex-shrink-0 text-[10px] bg-amber-400 text-black font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide">
-                        Verified
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-zinc-400 mt-0.5">{biz.cat}</p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-sm font-bold text-zinc-900">★ {biz.rating}</p>
-                  <p className="text-xs text-zinc-400">{biz.reviews} reviews</p>
-                </div>
-              </div>
-            ))}
-            <div className="bg-amber-400 rounded-2xl p-5 shadow-sm">
-              <p className="text-xs font-bold text-black/60 uppercase tracking-widest mb-1">Ready to join them?</p>
-              <p className="text-black font-black text-lg leading-snug">Claim your listing in 2 minutes.</p>
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="mt-3 px-5 py-2 bg-black text-white text-sm font-bold rounded-xl hover:bg-zinc-800 transition"
-              >
-                Get started free →
-              </button>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.05] mb-6 text-zinc-900">
+            Your next customer is already looking for you.
+          </h1>
+
+          <p className="text-zinc-500 text-lg md:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
+            Lemon is Miami&apos;s app for finding the best local services, places, and experiences.
+            You&apos;re already on Lemon — claim your business to rank higher, receive bookings, and earn
+            trust from the community.
+          </p>
+
+          <div id="hero-search" className="mb-3">
+            <BusinessSearch />
+          </div>
+
+          <p className="text-zinc-400 text-sm mb-4">
+            Claim your business free. 30-day trial. No charge today.
+          </p>
+
+          <Link
+            href="/login"
+            className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors underline underline-offset-2"
+          >
+            Already on Lemon? Sign In
+          </Link>
+
+          {/* Live counter */}
+          <div className="mt-14 flex flex-col items-center gap-3">
+            <div className="inline-flex items-center gap-2 bg-white border border-zinc-200 rounded-full px-4 py-2 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-black text-zinc-900 tracking-widest uppercase">Live in Miami</span>
             </div>
+            <p className="text-6xl font-black text-zinc-900 tabular-nums leading-none">
+              <LiveCounter />
+            </p>
+            <p className="text-sm text-zinc-500">
+              people found a business on Lemon in the last 24 hours.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── 2. EVERY SERVICE BUSINESS ── */}
-      <section className="bg-zinc-50 border-y border-zinc-100 py-20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">Browse by category</p>
-            <h2 className="text-3xl font-black tracking-tight text-zinc-900">Every service business on Lemon</h2>
-          </div>
+      {/* ── 2. CATEGORY GRID ── */}
+      <section className="py-20 px-6">
+        <div className="max-w-lg mx-auto">
+          <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-10">
+            Every service business belongs on Lemon
+          </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             {CATEGORIES.map((cat) => (
               <div
                 key={cat.label}
-                className="bg-white border border-zinc-200 hover:border-amber-400 hover:shadow-md rounded-xl p-5 flex flex-col gap-3 cursor-pointer transition group"
+                className="bg-white border border-zinc-200 rounded-2xl px-5 py-4 flex items-center gap-3 shadow-sm hover:border-amber-300 hover:shadow-md transition cursor-default"
               >
-                <span className="text-2xl">{cat.icon}</span>
-                <div>
-                  <p className="font-bold text-sm text-zinc-900 group-hover:text-amber-500 transition-colors">{cat.label}</p>
-                  <p className="text-xs text-zinc-400 mt-0.5">{cat.count} businesses</p>
-                </div>
+                <span className="text-xl flex-shrink-0">{cat.emoji}</span>
+                <span className="font-bold text-sm text-zinc-900 leading-snug">{cat.label}</span>
               </div>
+            ))}
+          </div>
+
+          <div className="flex justify-center mb-8">
+            <span className="bg-amber-400 text-black font-bold text-sm rounded-full px-6 py-2.5">
+              + Yours
+            </span>
+          </div>
+
+          <p className="text-center text-zinc-400 text-sm">
+            Whatever you do — if people pay for it, you belong on Lemon.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 3. VALUE PROPS ── */}
+      <section className="bg-zinc-50 border-y border-zinc-100 py-20 px-6">
+        <div className="max-w-2xl mx-auto space-y-12">
+          {VALUE_PROPS.map((vp, i) => (
+            <div key={i} className="flex gap-6 items-start">
+              <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-2xl shadow-sm">
+                {vp.icon}
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-zinc-900 mb-2">{vp.title}</h3>
+                <p className="text-zinc-500 text-sm leading-relaxed">{vp.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 4. SOCIAL PROOF ── */}
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest text-center mb-3">
+            Already on Lemon
+          </p>
+          <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-2">
+            Real Miami businesses, getting discovered
+          </h2>
+          <p className="text-zinc-400 text-sm text-center mb-12">
+            These spots claimed their profile. Yours is waiting.
+          </p>
+          <div className="grid md:grid-cols-3 gap-5">
+            {SHOWCASE.map((biz) => (
+              <BusinessCard key={biz.name} biz={biz} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── 3. ADD A BUSINESS BANNER ── */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="bg-amber-400 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg shadow-amber-400/20">
-          <div>
-            <p className="text-xs font-mono text-black/60 uppercase tracking-widest mb-1">Not listed yet?</p>
-            <h2 className="text-xl font-black tracking-tight text-black">Add your business in 2 minutes.</h2>
-            <p className="text-sm text-black/60 mt-1 max-w-md">
-              We&apos;re expanding the Miami registry daily. Submit your listing and become discoverable immediately.
-            </p>
-          </div>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="flex-shrink-0 px-6 py-3 bg-black text-white font-bold rounded-xl hover:bg-zinc-800 transition text-sm whitespace-nowrap"
-          >
-            Add a business →
-          </button>
+      {/* ── 5. MID-PAGE SEARCH ── */}
+      <section className="bg-zinc-50 border-y border-zinc-100 py-14 px-6">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-center text-sm text-zinc-500 mb-5">
+            See your business on Lemon — search to claim it.
+          </p>
+          <BusinessSearch />
         </div>
       </section>
 
-      {/* ── 4. HOW IT WORKS ── */}
-      <section id="how-it-works" className="bg-zinc-50 border-y border-zinc-100 py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-14">
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">Simple process</p>
-            <h2 className="text-3xl font-black tracking-tight text-zinc-900">How Lemon works for your business</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {STEPS.map((step) => (
-              <div key={step.n} className="bg-white border border-zinc-200 rounded-2xl p-8 shadow-sm">
-                <p className="text-5xl font-black text-zinc-100 leading-none mb-4">{step.n}</p>
-                <h3 className="text-lg font-black mb-2 text-zinc-900">{step.title}</h3>
+      {/* ── 6. HOW LEMON WORKS ── */}
+      <section className="py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-16">
+            How Lemon works for your business
+          </h2>
+          <div className="grid md:grid-cols-3 gap-10">
+            {[
+              {
+                n: "01",
+                title: "You're already on the app",
+                body: "We pre-load every local business using public data. Your listing is live. Claim it to update the information, and let people book with you directly.",
+              },
+              {
+                n: "02",
+                title: "Customers discover you through trust",
+                body: "Users see what services their friends use and love. When your business gets a great reaction, it spreads to their entire network.",
+              },
+              {
+                n: "03",
+                title: "One simple subscription",
+                body: "Pick the plan that fits your business — starting at $29/month. No per-booking fees. Free for the first 30 days.",
+              },
+            ].map((step) => (
+              <div key={step.n}>
+                <p className="text-7xl font-black text-zinc-100 leading-none mb-5 select-none">
+                  {step.n}
+                </p>
+                <h3 className="font-black text-zinc-900 mb-2 text-lg">{step.title}</h3>
                 <p className="text-sm text-zinc-500 leading-relaxed">{step.body}</p>
               </div>
             ))}
@@ -294,268 +446,151 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 5. VALUE PROPS ── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-14">
-          <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">Why claim your profile?</p>
-          <h2 className="text-3xl font-black tracking-tight text-zinc-900">Everything your listing unlocks</h2>
-        </div>
-
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {VALUE_PROPS.map((vp) => (
-            <div key={vp.title} className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-amber-200 transition">
-              <span className="text-2xl">{vp.icon}</span>
-              <h3 className="font-black mt-3 mb-1 text-zinc-900">{vp.title}</h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">{vp.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 6. SOCIAL PROOF ── */}
-      <section className="bg-zinc-50 border-y border-zinc-100 py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-            <div>
-              <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">Live activity</p>
-              <h2 className="text-3xl font-black tracking-tight text-zinc-900">Real Miami businesses, real results</h2>
-            </div>
-            <div className="flex-shrink-0 bg-white border border-zinc-200 rounded-xl px-6 py-4 text-center shadow-sm">
-              <p className="text-3xl font-black text-amber-500">127</p>
-              <p className="text-xs text-zinc-400 mt-1">claims this month</p>
-            </div>
+      {/* ── 7. THIS ISN'T ANOTHER DIRECTORY ── */}
+      <section className="bg-zinc-900 py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
+              This isn&apos;t another directory.
+              <br />
+              It&apos;s word of mouth, with infrastructure.
+            </h2>
+            <p className="text-zinc-400 text-sm max-w-md mx-auto">
+              See how Lemon turns every happy customer into your best marketing channel.
+            </p>
           </div>
 
-          <div className="space-y-3">
-            {RECENT_CLAIMS.map((claim) => (
-              <div
-                key={claim.name}
-                className="bg-white border border-zinc-200 rounded-xl px-5 py-4 flex items-center justify-between gap-4 shadow-sm"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center font-black text-xs flex-shrink-0 uppercase border border-amber-100">
-                    {claim.name[0]}
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm text-zinc-900">{claim.name}</p>
-                    <p className="text-xs text-zinc-400 mt-0.5">
-                      Claimed by {claim.owner} &bull; {claim.neighborhood} &bull; {claim.category}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                  <span className="text-xs text-zinc-400">{claim.ago}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Star rating callout */}
-          <div className="mt-10 bg-white border border-zinc-200 rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 shadow-sm">
-            <div className="flex-shrink-0 text-center">
-              <p className="text-5xl font-black text-zinc-900">4.9</p>
-              <div className="flex gap-0.5 justify-center mt-1 text-amber-400">
-                {"★★★★★".split("").map((s, i) => <span key={i}>{s}</span>)}
-              </div>
-              <p className="text-xs text-zinc-400 mt-1">average rating</p>
-            </div>
-            <div className="w-px h-16 bg-zinc-100 hidden sm:block" />
-            <div>
-              <p className="font-black text-lg text-zinc-900 mb-1">A rating system people actually trust</p>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                Every review on Lemon is tied to a verified local customer. No fake stars, no gaming the system — just honest feedback from Miami.
+          <div className="flex flex-col md:flex-row items-center justify-center gap-16">
+            <PhoneMockup />
+            <div className="max-w-xs text-center md:text-left">
+              <h3 className="text-xl font-black text-white mb-4">
+                Your best marketing is your happy customers
+              </h3>
+              <p className="text-zinc-400 text-sm leading-relaxed">
+                Every great reaction a customer leaves gets seen by their friends. One happy customer
+                becomes ten new ones.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 7. PRICING ── */}
-      <section id="pricing" className="max-w-6xl mx-auto px-6 py-24">
-        <div className="text-center mb-14">
-          <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">Simple pricing</p>
-          <h2 className="text-3xl font-black tracking-tight text-zinc-900">Free forever. More when you&apos;re ready.</h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          {/* Free */}
-          <div className="bg-white border border-zinc-200 rounded-2xl p-8 flex flex-col shadow-sm">
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-4">Free</p>
-            <p className="text-5xl font-black mb-1 text-zinc-900">$0</p>
-            <p className="text-sm text-zinc-400 mb-8">Forever. No card needed.</p>
-            <ul className="space-y-3 text-sm text-zinc-600 flex-1">
-              {["Searchable listing", "Business profile page", "Claim your existing listing", "Owner dashboard access", "Email on claim decision"].map((f) => (
-                <li key={f} className="flex items-center gap-2.5">
-                  <svg className="text-emerald-500 flex-shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="mt-8 w-full py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 font-bold rounded-xl transition text-sm border border-zinc-200"
-            >
-              Get started free
-            </button>
-          </div>
-
-          {/* Verified Partner */}
-          <div className="bg-zinc-900 border-2 border-zinc-900 rounded-2xl p-8 flex flex-col relative overflow-hidden shadow-xl">
-            <div className="absolute top-4 right-4 bg-amber-400 text-black text-xs font-black px-2.5 py-1 rounded-full uppercase tracking-wide">
-              Popular
-            </div>
-            <p className="text-xs font-mono text-amber-400 uppercase tracking-widest mb-4">Verified Partner</p>
-            <p className="text-5xl font-black mb-1 text-white">$29<span className="text-2xl text-zinc-500">/mo</span></p>
-            <p className="text-sm text-zinc-400 mb-8">Everything in Free, plus:</p>
-            <ul className="space-y-3 text-sm text-zinc-300 flex-1">
-              {[
-                "Verified badge on your profile",
-                "Priority search placement",
-                "Booking integration",
-                "Analytics dashboard",
-                "Customer engagement alerts",
-                "Dedicated support",
-              ].map((f) => (
-                <li key={f} className="flex items-center gap-2.5">
-                  <svg className="text-amber-400 flex-shrink-0" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button className="mt-8 w-full py-3 bg-amber-400 hover:bg-amber-300 text-black font-bold rounded-xl transition text-sm">
-              Join waitlist
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 8. FAQ ── */}
-      <section id="faq" className="bg-zinc-50 border-y border-zinc-100 py-24">
-        <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-2">Got questions?</p>
-            <h2 className="text-3xl font-black tracking-tight text-zinc-900">Your questions, answered</h2>
-          </div>
-          <div className="bg-white border border-zinc-200 rounded-2xl px-8 shadow-sm">
-            {FAQS.map((faq) => (
-              <FaqItem key={faq.q} q={faq.q} a={faq.a} />
-            ))}
-          </div>
+      {/* ── 8. RATING SYSTEM ── */}
+      <section className="py-20 px-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-black text-zinc-900 mb-5">
+            A rating system people actually trust
+          </h2>
+          <p className="text-zinc-500 leading-relaxed text-lg">
+            One-tap emoji reactions. No fake paragraphs. A score out of 10 that means something because
+            the volume of responses is massive.
+          </p>
         </div>
       </section>
 
       {/* ── 9. BOTTOM CTA ── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
-        <div className="bg-amber-400 rounded-2xl p-10 md:p-16 text-center max-w-2xl mx-auto shadow-xl shadow-amber-400/20">
-          <p className="text-xs font-mono text-black/60 uppercase tracking-widest mb-3">This isn&apos;t another directory</p>
-          <h2 className="text-3xl font-black tracking-tight text-black mb-3">Claim your business in 2 minutes</h2>
-          <p className="text-black/60 text-sm leading-relaxed mb-8">
-            Join 1,247 Miami businesses already on Lemon. Free forever — no credit card, no hidden fees.
+      <section className="bg-amber-400 py-20 px-6">
+        <div className="max-w-xl mx-auto text-center">
+          <h2 className="text-3xl font-black text-black mb-3">
+            Claim your business in 2 minutes
+          </h2>
+          <p className="text-black/60 mb-8 text-lg">
+            Find your business, confirm it&apos;s yours, and you&apos;re live. Free for 30 days.
           </p>
           <button
-            onClick={() => setShowAddModal(true)}
-            className="px-8 py-3.5 bg-black text-white font-bold rounded-xl hover:bg-zinc-800 transition text-sm shadow-md"
+            onClick={scrollToSearch}
+            className="px-8 py-4 bg-black text-white font-bold rounded-2xl hover:bg-zinc-800 transition text-sm shadow-lg"
           >
-            Get started free →
+            Find my business →
           </button>
-          <p className="text-black/40 text-xs mt-4">Free to list &bull; No credit card required</p>
         </div>
       </section>
 
-      {/* ── 10. LEAD CAPTURE ── */}
-      <section className="bg-zinc-50 border-t border-zinc-100 py-20">
-        <div className="max-w-lg mx-auto px-6 text-center">
-          <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest mb-3">Stay in the loop</p>
-          <h2 className="text-2xl font-black tracking-tight text-zinc-900 mb-3">Be first to know</h2>
-          <p className="text-zinc-500 text-sm leading-relaxed mb-8">
-            We&apos;re launching new features for Miami business owners every week. Drop your email and we&apos;ll keep you posted.
-          </p>
+      {/* ── 10. FAQ ── */}
+      <section className="py-20 px-6">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl font-black text-zinc-900 text-center mb-12">
+            Your questions, answered
+          </h2>
+          <div className="bg-white border border-zinc-200 rounded-2xl px-8 shadow-sm mb-10">
+            {FAQS.map((faq) => (
+              <FaqItem key={faq.q} q={faq.q} a={faq.a} />
+            ))}
+          </div>
 
-          {waitlistDone ? (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-6 py-4">
-              <p className="text-emerald-600 font-semibold text-sm">You&apos;re on the list. We&apos;ll be in touch soon.</p>
-            </div>
-          ) : (
-            <form
-              onSubmit={(e) => { e.preventDefault(); if (email.trim()) setWaitlistDone(true); }}
-              className="flex flex-col sm:flex-row gap-3"
-            >
-              <input
-                type="email"
-                required
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 bg-white border border-zinc-200 focus:border-amber-400 focus:outline-none text-zinc-900 placeholder-zinc-400 rounded-xl px-4 py-3 text-sm transition shadow-sm"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-black font-bold rounded-xl transition text-sm flex-shrink-0"
-              >
-                Notify me
-              </button>
-            </form>
-          )}
-
-          <p className="text-zinc-400 text-xs mt-4">No spam. Unsubscribe anytime.</p>
+          {/* Third search placement — after FAQ */}
+          <p className="text-center text-sm text-zinc-400 mb-5">Ready to get started?</p>
+          <BusinessSearch />
         </div>
       </section>
 
-      {/* ── 11. FOOTER ── */}
-      <footer className="border-t border-zinc-100 bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="flex flex-col md:flex-row items-start justify-between gap-10">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-md bg-amber-400 flex items-center justify-center font-black text-black text-base">
-                  L
-                </div>
-                <span className="font-black tracking-tight text-zinc-900">Lemon Miami</span>
-              </div>
-              <p className="text-xs text-zinc-400 max-w-xs leading-relaxed">
-                The fastest-growing local business directory for Miami. Claim your profile. Get discovered.
-              </p>
-            </div>
+      {/* ── 11. FINAL CTA + FOOTER ── */}
+      <footer className="bg-zinc-900">
+        <div className="py-24 px-6 text-center border-b border-zinc-800">
+          <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
+            Your customers are already here.
+            <br />
+            Meet them.
+          </h2>
+          <p className="text-zinc-400 mb-10 text-lg">Join Lemon for free.</p>
+          <button
+            onClick={scrollToSearch}
+            className="px-8 py-4 bg-amber-400 text-black font-bold rounded-2xl hover:bg-amber-300 transition text-sm shadow-lg"
+          >
+            Claim Your Business
+          </button>
+        </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 text-sm">
-              <div>
-                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">Product</p>
-                <ul className="space-y-2 text-zinc-400">
-                  <li><a href="#how-it-works" className="hover:text-zinc-900 transition-colors">How it Works</a></li>
-                  <li><a href="#pricing" className="hover:text-zinc-900 transition-colors">Pricing</a></li>
-                  <li><a href="#faq" className="hover:text-zinc-900 transition-colors">FAQ</a></li>
-                </ul>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">Business</p>
-                <ul className="space-y-2 text-zinc-400">
-                  <li><button onClick={() => setShowAddModal(true)} className="hover:text-zinc-900 transition-colors">Add a listing</button></li>
-                  <li><a href="/dashboard" className="hover:text-zinc-900 transition-colors">Dashboard</a></li>
-                  <li><a href="/login" className="hover:text-zinc-900 transition-colors">Sign in</a></li>
-                </ul>
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">Legal</p>
-                <ul className="space-y-2 text-zinc-400">
-                  <li><a href="/privacy" className="hover:text-zinc-900 transition-colors">Privacy Policy</a></li>
-                  <li><a href="/terms" className="hover:text-zinc-900 transition-colors">Terms of Service</a></li>
-                  <li><a href="mailto:support@lemonmiami.com" className="hover:text-zinc-900 transition-colors">Contact</a></li>
-                </ul>
-              </div>
+        <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center font-black text-black text-sm">
+              L
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-black text-white tracking-tight">Lemon</span>
+              <span className="text-[9px] font-black text-amber-400 tracking-widest uppercase">
+                for business
+              </span>
             </div>
           </div>
 
-          <div className="border-t border-zinc-100 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-400">
-            <p>&copy; {new Date().getFullYear()} Lemon Miami. All rights reserved.</p>
-            <p>Built for Miami &bull; Powered by Lemon</p>
+          <div className="flex items-center gap-6 text-sm text-zinc-500">
+            <a href="#" className="hover:text-zinc-300 transition-colors">About</a>
+            <a href="#" className="hover:text-zinc-300 transition-colors">Help</a>
+            <a href="#" className="hover:text-zinc-300 transition-colors">Terms</a>
+            <a href="#" className="hover:text-zinc-300 transition-colors">Privacy</a>
           </div>
+
+          <p className="text-xs text-zinc-600">© 2026 Lemon.</p>
         </div>
       </footer>
+
+      {/* ── STICKY SEARCH BAR ── */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t border-zinc-200 shadow-xl px-4 py-3 transition-all duration-300 ${
+          stickyVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="max-w-xl mx-auto">
+          <button
+            onClick={scrollToSearch}
+            className="w-full flex items-center gap-3 bg-zinc-50 border border-zinc-200 hover:border-amber-400 rounded-xl px-4 py-3 text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
+          >
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="flex-shrink-0"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span className="flex-1 text-left">Search your business →</span>
+          </button>
+        </div>
+      </div>
 
       <ClaimModal
         isOpen={showAddModal}
