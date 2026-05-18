@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createClient } from '@/src/utils/supabase/server';
 
 interface Props {
@@ -23,6 +24,7 @@ export default async function BusinessPage({ params }: Props) {
       .from('claim_requests')
       .select('status')
       .eq('business_id', params.id)
+      .eq('status', 'approved')
       .maybeSingle(),
     supabase
       .from('businesses')
@@ -32,51 +34,67 @@ export default async function BusinessPage({ params }: Props) {
   ]);
 
   if (error || !data) {
-    return <div className="p-10 text-white">Business not found</div>;
+    return (
+      <main className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-zinc-500 mb-4">Business not found.</p>
+          <Link href="/" className="text-sm font-semibold text-amber-500 hover:text-amber-600">← Back to Lemon</Link>
+        </div>
+      </main>
+    );
   }
 
   const hoursDisplay = formatHours(data.hours);
-  const isClaimed = claim?.status === 'approved';
+  const isClaimed = !!claim || data.is_verified;
 
   return (
-    <main className="min-h-screen bg-neutral-900 text-white">
-      <div className="max-w-3xl mx-auto px-6 pt-10 pb-16">
+    <main className="min-h-screen bg-zinc-50 text-zinc-900">
 
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <h1 className="text-4xl font-black">{data.name}</h1>
-            <p className="text-neutral-400 mt-2">
-              {[data.category, data.subcategory, data.neighborhood].filter(Boolean).join(' • ')}
-            </p>
-          </div>
-          {data.is_verified && (
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 bg-emerald-950/50 border border-emerald-800 px-3 py-1.5 rounded-full">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              Verified
-            </span>
-          )}
+      {/* Nav */}
+      <header className="border-b border-zinc-200 bg-white">
+        <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center font-black text-black text-base">L</div>
+            <span className="font-black tracking-tight text-zinc-900">Lemon Miami</span>
+          </Link>
+          <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors">
+            ← Back
+          </Link>
         </div>
+      </header>
+
+      <div className="max-w-3xl mx-auto px-6 pt-8 pb-16">
 
         {/* Photo */}
-        <div className="mt-6 w-full h-64 bg-neutral-800 rounded-2xl overflow-hidden">
+        <div className="w-full h-56 bg-zinc-200 rounded-2xl overflow-hidden mb-6">
           {data.photo_urls?.length > 0 ? (
             <img src={data.photo_urls[0]} className="w-full h-full object-cover" alt={data.name} />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-neutral-500">
-              No image yet
+            <div className="w-full h-full flex items-center justify-center text-5xl">
+              🏢
             </div>
           )}
         </div>
 
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
+          <div>
+            <h1 className="text-3xl font-black text-zinc-900">{data.name}</h1>
+            <p className="text-zinc-500 mt-1">
+              {[data.category, data.subcategory, data.neighborhood].filter(Boolean).join(' • ')}
+            </p>
+          </div>
+          {data.is_verified && (
+            <span className="flex items-center gap-1.5 text-xs font-bold text-black bg-amber-400 px-3 py-1.5 rounded-full">
+              ✓ Verified
+            </span>
+          )}
+        </div>
+
         {/* Detail grid */}
-        <div className="mt-6 grid grid-cols-2 gap-4">
-          <InfoCard label="Price range" value={data.price_range || 'Unknown'} />
-          <InfoCard
-            label="Status"
-            value={isClaimed ? 'Claimed' : claim?.status ?? 'Unclaimed'}
-            highlight={isClaimed}
-          />
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <InfoCard label="Status" value={isClaimed ? 'Claimed' : 'Unclaimed'} highlight={isClaimed} />
+          <InfoCard label="Price range" value={data.price_range || 'Not listed'} />
           {data.address && data.address !== 'Not Provided' && (
             <InfoCard label="Address" value={data.address} wide />
           )}
@@ -91,18 +109,19 @@ export default async function BusinessPage({ params }: Props) {
           )}
         </div>
 
-        <p className="mt-6 text-neutral-300 leading-relaxed">
-          This business is listed on Lemon.{' '}
-          {!isClaimed && 'Claim it to unlock editing, analytics, and customer discovery features.'}
-        </p>
-
         {!isClaimed && (
-          <a
-            href={`/claim/${data.id}`}
-            className="mt-8 block w-full bg-amber-400 text-black font-bold py-3 rounded-xl hover:bg-amber-300 transition text-center"
-          >
-            Claim this business
-          </a>
+          <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm">
+            <p className="font-black text-zinc-900 mb-1">Is this your business?</p>
+            <p className="text-sm text-zinc-500 mb-4">
+              Claim it to unlock editing, analytics, and customer discovery features. Free forever.
+            </p>
+            <Link
+              href={`/claim/${data.id}`}
+              className="block w-full bg-amber-400 text-black font-bold py-3 rounded-xl hover:bg-amber-300 transition text-center text-sm"
+            >
+              Claim this business →
+            </Link>
+          </div>
         )}
       </div>
     </main>
@@ -121,9 +140,9 @@ function InfoCard({
   highlight?: boolean;
 }) {
   return (
-    <div className={`bg-neutral-800 rounded-xl p-4 ${wide ? 'col-span-2' : ''}`}>
-      <div className="text-xs text-neutral-400">{label}</div>
-      <div className={`font-bold mt-1 ${highlight ? 'text-emerald-400' : ''}`}>{value}</div>
+    <div className={`bg-white border border-zinc-200 rounded-xl p-4 shadow-sm ${wide ? 'col-span-2' : ''}`}>
+      <div className="text-xs text-zinc-400 uppercase tracking-wider mb-1">{label}</div>
+      <div className={`font-bold text-sm ${highlight ? 'text-emerald-600' : 'text-zinc-900'}`}>{value}</div>
     </div>
   );
 }

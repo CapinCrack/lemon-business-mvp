@@ -48,7 +48,7 @@ export default function BusinessSearch() {
         .from('businesses')
         .select('id, name, category, subcategory, neighborhood, is_verified')
         .ilike('name', `%${query}%`)
-        .limit(5);
+        .limit(8);
 
       if (error) throw error;
       setResults(data || []);

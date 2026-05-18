@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import ClaimModal from './ClaimModal';
 
 
@@ -11,6 +12,7 @@ interface Business {
   category: string;
   subcategory?: string;
   neighborhood?: string;
+  is_verified?: boolean;
 }
 
 interface ClaimModalControllerProps {
@@ -61,25 +63,40 @@ export default function ClaimModalController({ searchResults }: ClaimModalContro
 
   // Path A: If the database found matching businesses
   return (
-    <div className="space-y-2 max-h-60 overflow-y-auto p-1">
+    <div className="space-y-2 max-h-72 overflow-y-auto p-1">
       {searchResults.map((biz) => (
         <div
           key={biz.id}
-          className="flex items-center justify-between p-3 bg-zinc-50 border border-zinc-200 rounded-xl hover:border-zinc-300 transition-all duration-150 group"
+          className="flex items-center justify-between gap-3 p-3 bg-zinc-50 border border-zinc-200 rounded-xl hover:border-zinc-300 transition-all duration-150"
         >
-          <div className="text-left">
-            <h3 className="font-bold text-zinc-900 text-sm">{biz.name}</h3>
-            <p className="text-xs text-zinc-400">
-              {biz.category} {biz.neighborhood ? `• ${biz.neighborhood}` : ''}
+          <div className="text-left min-w-0">
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-zinc-900 text-sm truncate">{biz.name}</h3>
+              {biz.is_verified && (
+                <span className="flex-shrink-0 text-[10px] bg-amber-400 text-black font-black px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                  Verified
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-zinc-400 mt-0.5 truncate">
+              {biz.category}{biz.neighborhood ? ` • ${biz.neighborhood}` : ''}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => handleOpenClaim(biz)}
-            className="bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors duration-150"
-          >
-            Claim Business
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Link
+              href={`/business/${biz.id}`}
+              className="text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors px-3 py-2 rounded-lg hover:bg-zinc-100"
+            >
+              View
+            </Link>
+            <button
+              type="button"
+              onClick={() => handleOpenClaim(biz)}
+              className="bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors duration-150"
+            >
+              Claim
+            </button>
+          </div>
         </div>
       ))}
 

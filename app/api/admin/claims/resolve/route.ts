@@ -1,9 +1,17 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { createClient as createServerClient } from '@/src/utils/supabase/server';
 import { notifyClaimantOfDecision } from '@/app/lib/email';
 
 export async function POST(req: Request) {
   try {
+    // Verify the caller is the admin
+    const auth = await createServerClient();
+    const { data: { session } } = await auth.auth.getSession();
+    if (!session || session.user.email !== process.env.ADMIN_EMAIL) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { claimId, action } = await req.json();
 
     if (!claimId || !['approved', 'rejected'].includes(action)) {
