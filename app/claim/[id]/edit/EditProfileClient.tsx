@@ -115,9 +115,8 @@ export default function EditProfileClient({ business }: { business: Business }) 
   const [hours, setHours] = useState<Record<string, string>>(
     (draft.hours as Record<string, string>) ?? business.hours ?? {}
   );
-  const [bookingNudge, setBookingNudge] = useState(false);
+  const [warned, setWarned] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [continueTaps, setContinueTaps] = useState(0);
 
   const fields = [name, category, address, price, booking, aboutUs];
   const pct = completion(fields);
@@ -150,9 +149,8 @@ export default function EditProfileClient({ business }: { business: Business }) 
   }
 
   async function handleContinue() {
-    if (booking !== 'Lemon' && continueTaps === 0) {
-      setBookingNudge(true);
-      setContinueTaps(1);
+    if (booking !== 'Lemon' && !warned) {
+      setWarned(true);
       return;
     }
     await saveDraft();
@@ -257,11 +255,11 @@ export default function EditProfileClient({ business }: { business: Business }) 
                 {BOOKING_OPTIONS.map((opt) => (
                   <button
                     key={opt.id}
-                    onClick={() => { setBooking(opt.id); setBookingNudge(false); setContinueTaps(0); }}
+                    onClick={() => setBooking(opt.id)}
                     className={`relative w-full text-left px-4 py-3 rounded-xl border transition ${
                       booking === opt.id
                         ? 'border-amber-400 bg-amber-50'
-                        : bookingNudge && opt.id === 'Lemon'
+                        : warned && booking !== 'Lemon' && opt.id === 'Lemon'
                         ? 'border-amber-400 bg-amber-50 animate-pulse'
                         : 'border-zinc-200 hover:border-zinc-300'
                     }`}
@@ -361,7 +359,7 @@ export default function EditProfileClient({ business }: { business: Business }) 
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-zinc-100 shadow-xl px-6 py-4 z-50">
         <div className="max-w-5xl mx-auto space-y-2">
-          {bookingNudge && (
+          {warned && booking !== 'Lemon' && (
             <p className="text-xs text-center text-amber-600 font-medium">
               We recommend booking through Lemon - no extra cost, and you get all the benefits above.
             </p>
