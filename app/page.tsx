@@ -285,7 +285,7 @@ export default function Home() {
       <section
         id="hero"
         ref={heroRef}
-        className="relative bg-gradient-to-b from-amber-200/70 via-amber-50/40 to-white pt-20 pb-28 px-6 text-center"
+        className="relative bg-gradient-to-b from-amber-100 via-amber-50 to-white pt-20 pb-28 px-6 text-center"
       >
         <div className="max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white border border-amber-200 rounded-full px-4 py-1.5 text-xs font-semibold text-amber-600 tracking-wide mb-8 shadow-sm">
@@ -297,7 +297,7 @@ export default function Home() {
             Your next customer is already looking for you.
           </h1>
 
-          <p className="text-zinc-500 text-lg md:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
+          <p className="text-zinc-700 text-lg md:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
             Lemon is Miami&apos;s app for finding the best local services, places, and experiences.
             You&apos;re already on Lemon - claim your business to rank higher, receive bookings, and earn
             trust from the community.
@@ -307,13 +307,13 @@ export default function Home() {
             <BusinessSearch />
           </div>
 
-          <p className="text-zinc-400 text-sm mb-4">
+          <p className="text-zinc-600 text-sm mb-4">
             Claim your business free. 30-day trial. No charge today.
           </p>
 
           <Link
             href="/login"
-            className="text-sm text-zinc-400 hover:text-zinc-600 transition-colors underline underline-offset-2"
+            className="text-sm text-zinc-600 hover:text-zinc-800 transition-colors underline underline-offset-2"
           >
             Already on Lemon? Sign In
           </Link>
