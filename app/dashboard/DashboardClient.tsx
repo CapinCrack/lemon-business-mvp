@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 interface Business {
   id: string;
   name: string;
-  phone: string;
+  phone_number: string;
   hours: string;
   neighborhood: string;
   owner_id: string;
@@ -27,7 +27,7 @@ export default function DashboardClient({ initialBusiness, userId }: DashboardCl
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    phone: initialBusiness?.phone || '',
+    phone_number: initialBusiness?.phone_number || '',
     hours: initialBusiness?.hours || '',
     neighborhood: initialBusiness?.neighborhood || '',
   });
@@ -39,7 +39,7 @@ export default function DashboardClient({ initialBusiness, userId }: DashboardCl
   useEffect(() => {
     if (initialBusiness) {
       setFormData({
-        phone: initialBusiness.phone || '',
+        phone_number: initialBusiness.phone_number || '',
         hours: initialBusiness.hours || '',
         neighborhood: initialBusiness.neighborhood || '',
       });
@@ -66,7 +66,7 @@ export default function DashboardClient({ initialBusiness, userId }: DashboardCl
         const { error: updateError } = await supabase
           .from('businesses')
           .update({
-            phone: formData.phone,
+            phone_number: formData.phone_number,
             hours: formData.hours,
             neighborhood: formData.neighborhood,
           })
@@ -79,7 +79,7 @@ export default function DashboardClient({ initialBusiness, userId }: DashboardCl
           .from('businesses')
           .insert({
             owner_id: userId,
-            phone: formData.phone,
+            phone_number: formData.phone_number,
             hours: formData.hours,
             neighborhood: formData.neighborhood,
             name: 'My New Miami Business',
@@ -138,14 +138,14 @@ export default function DashboardClient({ initialBusiness, userId }: DashboardCl
           )}
 
           <div className="space-y-2">
-            <label htmlFor="phone" className="block text-xs font-mono text-zinc-400 uppercase tracking-wider">
+            <label htmlFor="phone_number" className="block text-xs font-mono text-zinc-400 uppercase tracking-wider">
               Phone Number
             </label>
             <input
               type="text"
-              id="phone"
-              name="phone"
-              value={formData.phone}
+              id="phone_number"
+              name="phone_number"
+              value={formData.phone_number}
               onChange={handleChange}
               placeholder="(305) 555-0199"
               className="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition"
