@@ -33,9 +33,29 @@ export async function POST(req: Request) {
     if (claimError) throw claimError;
 
     if (action === 'approved' && claim.business_id) {
+      // Fetch draft_data so edits from Screen 2 go live on approval
+      const { data: biz } = await supabase
+        .from('businesses')
+        .select('draft_data')
+        .eq('id', claim.business_id)
+        .single();
+
+      const draft = (biz?.draft_data ?? {}) as Record<string, unknown>;
+      const draftFields = Object.keys(draft).length > 0 ? {
+        name: draft.name,
+        category: draft.category,
+        subcategory: draft.subcategory,
+        address: draft.address,
+        price_range: draft.price_range,
+        booking_option: draft.booking_option,
+        about_us: draft.about_us,
+        good_to_know: draft.good_to_know,
+        hours: draft.hours,
+      } : {};
+
       const { error: bizError } = await supabase
         .from('businesses')
-        .update({ is_verified: true })
+        .update({ is_verified: true, ...draftFields })
         .eq('id', claim.business_id);
       if (bizError) console.error('[admin/resolve] Business update failed:', bizError);
     }

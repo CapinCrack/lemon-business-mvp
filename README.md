@@ -173,3 +173,52 @@ Supabase configuration required:
 - Email delivery via `onboarding@resend.dev` only reaches the Resend account holder's inbox. A verified custom domain is required for real delivery to business owners
 - Admin verification review is manual — no automated approval workflow
 - Dashboard stats (views, bookings, reviews) are placeholders
+
+---
+
+## Writeup
+
+### What I built vs. what I cut, and why
+
+Built everything in the core funnel: landing page with real search, all 6 claim flow screens, Supabase auth, document upload to Storage, admin panel with approve/reject, and an owner dashboard. The saved-but-unpublished flow works end-to-end - edits in Screen 2 auto-save to `draft_data`, and on admin approval those fields are merged into the live business record.
+
+Cut or left as stubs:
+- **Stripe** - wiring real payments into an MVP with no real customers is premature. The fake checkout demonstrates the UX decision (free trial gate) without any compliance overhead.
+- **Google/Apple OAuth** - Supabase supports it, but it requires app store review and OAuth consent screen approval which has multi-day lead times. Email/password gets you 95% of the way for an MVP.
+- **Real dashboard stats** - views, bookings, and reviews require instrumentation infrastructure (event tracking, aggregation jobs). Placeholders communicate the intent; building the pipeline would be a week of work with no user-facing payoff yet.
+- **Automated verification** - manual admin review is actually the right call at seed stage. You want a human in the loop while you figure out what fraud looks like.
+
+### Schema decisions and trade-offs
+
+The key decision was the `draft_data` JSONB column on `businesses`. The alternative was a separate `business_drafts` table with foreign key to `businesses`. I chose the JSONB approach because:
+1. It collapses the saved/published distinction into a single row - no join needed when rendering the edit screen
+2. Auto-save writes are a single `UPDATE businesses SET draft_data = $1` - simple, cheap, no orphaned draft rows
+3. The trade-off is you lose per-field change history and can't diff individual fields between draft and live. That's fine for an MVP where the admin is just doing spot-check approval, not granular field review
+
+`verification_records` is a separate table (not a column on `businesses`) because a business can have multiple verification attempts across different methods, and the admin needs to see the full history.
+
+The `owner_id` column on `businesses` ties the claimed listing to a Supabase auth user, which is what protects the dashboard and edit flow. RLS policies enforce that only the owner can read their own draft.
+
+### Spec ambiguities and the calls I made
+
+**"Saved-but-unpublished state"** - the spec didn't define exactly when draft edits go live. I interpreted this as: edits save immediately to `draft_data` (autosave), but the public listing only shows the merged fields after admin approval. This means an owner can see their draft in the claim flow preview but customers see the original data until verified. That's the safer product call - you don't want unverified edits showing on a public listing.
+
+**Verification methods** - the spec listed "Google Business, phone, or document." Phone verification typically means SMS OTP which needs Twilio and a sending number. I made phone a self-attestation (checkbox + phone number entry) rather than an actual OTP flow. Honest about this in the UI.
+
+**The value screen (Screen 5)** - spec implied it was a simple pricing screen. I added the 3x booking stat and feature card grid because a plain pricing table with no context doesn't convert. The stat is placeholder but the layout communicates the intended sales motion.
+
+### What I'd change with another week
+
+1. **Real Stripe** - subscriptions via Stripe Checkout, webhook to set `plan` on the business record, and gate the dashboard features behind plan tier
+2. **Custom email domain** - verify a domain in Resend so outbound email actually reaches claimants
+3. **Search quality** - current search is `ilike '%query%'` on name only. I'd add full-text search across name + category + neighborhood, and weight results by `is_verified`
+4. **RLS audit** - the draft API route uses the service role key to bypass RLS. That's a shortcut that should become a properly scoped RLS policy so the service key isn't needed client-side
+5. **Photo upload in edit flow** - the photo field in Screen 2 accepts URLs but doesn't have a file picker. Real upload to Supabase Storage with a presigned URL would close this gap
+
+### What's broken and what I'd fix first
+
+**Most important:** The draft→live merge on admin approval was only wiring `is_verified=true` and not merging `draft_data` fields into the main columns. Fixed in this commit. Without it, any edits made in Screen 2 were silently discarded on approval.
+
+**Second:** Email only reaches the Resend account holder. Any claimant with a different email address gets no confirmation or decision notification. Fix: verify a custom domain in Resend.
+
+**Third:** The dashboard `owner_id` query assumes one business per user. If a user somehow ends up linked to multiple businesses (e.g., via the legacy `claim_requests` path), it silently returns only the first. Should either enforce the constraint at the DB level or handle the multi-business case in the UI.
