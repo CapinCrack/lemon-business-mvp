@@ -79,7 +79,7 @@ export default function VerifyPage() {
     <main className="min-h-screen bg-white pb-28">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-zinc-100">
-        <div className="max-w-lg mx-auto px-6 h-14 flex items-center gap-4">
+        <div className="max-w-2xl mx-auto px-6 h-14 flex items-center gap-4">
           <Link href={`/claim/${id}/account`} className="text-zinc-400 hover:text-zinc-700 transition-colors">
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -91,7 +91,7 @@ export default function VerifyPage() {
           </div>
         </div>
         {/* Step indicator */}
-        <div className="max-w-lg mx-auto px-6 pb-3 flex items-center gap-2">
+        <div className="max-w-2xl mx-auto px-6 pb-3 flex items-center gap-2">
           {[1, 2, 3, 4].map((step, i) => (
             <div
               key={step}
@@ -101,7 +101,7 @@ export default function VerifyPage() {
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-6 py-8 space-y-4">
+      <div className="max-w-2xl mx-auto px-6 py-8 space-y-4">
         <p className="text-xs text-zinc-400">
           Choose how you&apos;d like to prove you own this business. We review every claim within 24 hours.
         </p>
@@ -177,7 +177,7 @@ export default function VerifyPage() {
 
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-zinc-100 shadow-xl px-6 py-4 z-50">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-2xl mx-auto">
           <button
             onClick={handleSubmit}
             disabled={loading || (selected === 'document' && !file)}

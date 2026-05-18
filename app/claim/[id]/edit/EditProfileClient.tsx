@@ -150,7 +150,7 @@ export default function EditProfileClient({ business }: { business: Business }) 
   }
 
   async function handleContinue() {
-    if (booking !== 'lemon' && continueTaps === 0) {
+    if (booking !== 'Lemon' && continueTaps === 0) {
       setBookingNudge(true);
       setContinueTaps(1);
       return;
@@ -163,7 +163,7 @@ export default function EditProfileClient({ business }: { business: Business }) 
     <main className="min-h-screen bg-white pb-28">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-zinc-100">
-        <div className="max-w-lg mx-auto px-6 h-14 flex items-center gap-4">
+        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center gap-4">
           <Link href={`/claim/${business.id}`} className="text-zinc-400 hover:text-zinc-700 transition-colors">
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -176,7 +176,7 @@ export default function EditProfileClient({ business }: { business: Business }) 
           {saving && <span className="text-xs text-zinc-400">Saving…</span>}
         </div>
         {/* Progress bar */}
-        <div className="max-w-lg mx-auto px-6 pb-3 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-6 pb-3 flex items-center gap-3">
           <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
             <div
               className="h-full bg-amber-400 rounded-full transition-all duration-500"
@@ -187,169 +187,180 @@ export default function EditProfileClient({ business }: { business: Business }) 
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-6 py-8 space-y-10">
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="md:grid md:grid-cols-2 md:gap-12 space-y-10 md:space-y-0">
 
-        {/* 1. Business name */}
-        <Section label="business name">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full text-lg font-bold text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent"
-          />
-        </Section>
+          {/* ── Left column ── */}
+          <div className="space-y-10">
 
-        {/* 2. Category */}
-        <Section label="category">
-          <div className="flex gap-3">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="flex-1 text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent"
-            >
-              <option value="">Select category</option>
-              {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
-            </select>
-            <input
-              placeholder="Subcategory"
-              value={subcategory}
-              onChange={(e) => setSubcategory(e.target.value)}
-              className="flex-1 text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent placeholder-zinc-300"
-            />
-          </div>
-        </Section>
+            {/* 1. Business name */}
+            <Section label="business name">
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full text-lg font-bold text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent"
+              />
+            </Section>
 
-        {/* 3. Photos */}
-        <Section label="photos">
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {(business.photo_urls ?? []).map((url, i) => (
-              <div key={i} className="relative flex-shrink-0">
-                <img src={url} alt="" className="w-20 h-20 rounded-xl object-cover" />
-                {i === 0 && (
-                  <span className="absolute top-1 left-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">
-                    COVER
-                  </span>
-                )}
-              </div>
-            ))}
-            {(business.photo_urls ?? []).length === 0 && (
-              <div className="w-20 h-20 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-300 text-sm">
-                No photos
-              </div>
-            )}
-          </div>
-        </Section>
-
-        {/* 4. Hours */}
-        <Section label="hours">
-          <div className="space-y-2">
-            {DAYS.map((day) => (
-              <div key={day} className="flex items-center gap-3">
-                <span className="text-xs text-zinc-400 w-8 flex-shrink-0">{day}</span>
+            {/* 2. Category */}
+            <Section label="category">
+              <div className="flex gap-3">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="flex-1 text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent"
+                >
+                  <option value="">Select category</option>
+                  {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+                </select>
                 <input
-                  placeholder="e.g. 9am – 6pm or Closed"
-                  value={hours[day] ?? ''}
-                  onChange={(e) => setHours((h) => ({ ...h, [day]: e.target.value }))}
-                  className="flex-1 text-sm text-zinc-900 border-b border-zinc-100 focus:border-amber-400 outline-none py-1 bg-transparent placeholder-zinc-200"
+                  placeholder="Subcategory"
+                  value={subcategory}
+                  onChange={(e) => setSubcategory(e.target.value)}
+                  className="flex-1 text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent placeholder-zinc-300"
                 />
               </div>
-            ))}
+            </Section>
+
+            {/* 3. Address */}
+            <Section label="address">
+              <input
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Street address, Miami, FL"
+                className="w-full text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent placeholder-zinc-300"
+              />
+            </Section>
+
+            {/* 4. Price range */}
+            <Section label="price range">
+              <div className="flex gap-2">
+                {PRICE_OPTIONS.map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => setPrice(opt)}
+                    className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition ${
+                      price === opt
+                        ? 'bg-amber-400 border-amber-400 text-black'
+                        : 'border-zinc-200 text-zinc-500 hover:border-zinc-300'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </Section>
+
+            {/* 5. Booking options */}
+            <Section label="booking options">
+              <div className="space-y-2">
+                {BOOKING_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => { setBooking(opt.id); setBookingNudge(false); setContinueTaps(0); }}
+                    className={`relative w-full text-left px-4 py-3 rounded-xl border transition ${
+                      booking === opt.id
+                        ? 'border-amber-400 bg-amber-50'
+                        : bookingNudge && opt.id === 'Lemon'
+                        ? 'border-amber-400 bg-amber-50 animate-pulse'
+                        : 'border-zinc-200 hover:border-zinc-300'
+                    }`}
+                  >
+                    {opt.recommended && (
+                      <span className="absolute top-2 right-2 text-[9px] font-black bg-amber-400 text-black px-1.5 py-0.5 rounded-full uppercase">
+                        Recommended
+                      </span>
+                    )}
+                    <p className="text-sm font-bold text-zinc-900 pr-20">{opt.label}</p>
+                    <p className="text-xs text-zinc-400 mt-0.5">{opt.sub}</p>
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-zinc-400 mt-3 text-center">
+                We&apos;ve seen significantly more bookings when people can book through Lemon.
+              </p>
+            </Section>
+
           </div>
-        </Section>
 
-        {/* 5. Address */}
-        <Section label="address">
-          <input
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Street address, Miami, FL"
-            className="w-full text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent placeholder-zinc-300"
-          />
-        </Section>
+          {/* ── Right column ── */}
+          <div className="space-y-10">
 
-        {/* 6. Price range */}
-        <Section label="price range">
-          <div className="flex gap-2">
-            {PRICE_OPTIONS.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => setPrice(opt)}
-                className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition ${
-                  price === opt
-                    ? 'bg-amber-400 border-amber-400 text-black'
-                    : 'border-zinc-200 text-zinc-500 hover:border-zinc-300'
-                }`}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
-        </Section>
-
-        {/* 7. About us */}
-        <Section label="about us">
-          <textarea
-            value={aboutUs}
-            onChange={(e) => setAboutUs(e.target.value)}
-            placeholder="Tell customers what makes you special…"
-            rows={3}
-            className="w-full text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent resize-none placeholder-zinc-300"
-          />
-        </Section>
-
-        {/* 8. Good to know */}
-        <Section label="good to know">
-          <div className="flex flex-wrap gap-2">
-            {GOOD_TO_KNOW_TAGS.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => toggleTag(tag)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
-                  goodToKnow.includes(tag)
-                    ? 'bg-amber-400 border-amber-400 text-black'
-                    : 'border-zinc-200 text-zinc-500 hover:border-zinc-300'
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </Section>
-
-        {/* 9. Booking options */}
-        <Section label="booking options">
-          <div className="space-y-2">
-            {BOOKING_OPTIONS.map((opt) => (
-              <button
-                key={opt.id}
-                onClick={() => { setBooking(opt.id); setBookingNudge(false); setContinueTaps(0); }}
-                className={`relative w-full text-left px-4 py-3 rounded-xl border transition ${
-                  booking === opt.id
-                    ? 'border-amber-400 bg-amber-50'
-                    : bookingNudge && opt.id === 'lemon'
-                    ? 'border-amber-400 bg-amber-50 animate-pulse'
-                    : 'border-zinc-200 hover:border-zinc-300'
-                }`}
-              >
-                {opt.recommended && (
-                  <span className="absolute top-2 right-2 text-[9px] font-black bg-amber-400 text-black px-1.5 py-0.5 rounded-full uppercase">
-                    Recommended
-                  </span>
+            {/* 6. Photos */}
+            <Section label="photos">
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {(business.photo_urls ?? []).map((url, i) => (
+                  <div key={i} className="relative flex-shrink-0">
+                    <img src={url} alt="" className="w-20 h-20 rounded-xl object-cover" />
+                    {i === 0 && (
+                      <span className="absolute top-1 left-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">
+                        COVER
+                      </span>
+                    )}
+                  </div>
+                ))}
+                {(business.photo_urls ?? []).length === 0 && (
+                  <div className="w-20 h-20 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-300 text-sm">
+                    No photos
+                  </div>
                 )}
-                <p className="text-sm font-bold text-zinc-900 pr-20">{opt.label}</p>
-                <p className="text-xs text-zinc-400 mt-0.5">{opt.sub}</p>
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-zinc-400 mt-3 text-center">
-            We&apos;ve seen significantly more bookings when people can book through Lemon.
-          </p>
-        </Section>
+              </div>
+            </Section>
 
+            {/* 7. Hours */}
+            <Section label="hours">
+              <div className="space-y-2">
+                {DAYS.map((day) => (
+                  <div key={day} className="flex items-center gap-3">
+                    <span className="text-xs text-zinc-400 w-8 flex-shrink-0">{day}</span>
+                    <input
+                      placeholder="e.g. 9am – 6pm or Closed"
+                      value={hours[day] ?? ''}
+                      onChange={(e) => setHours((h) => ({ ...h, [day]: e.target.value }))}
+                      className="flex-1 text-sm text-zinc-900 border-b border-zinc-100 focus:border-amber-400 outline-none py-1 bg-transparent placeholder-zinc-200"
+                    />
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* 8. About us */}
+            <Section label="about us">
+              <textarea
+                value={aboutUs}
+                onChange={(e) => setAboutUs(e.target.value)}
+                placeholder="Tell customers what makes you special…"
+                rows={4}
+                className="w-full text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent resize-none placeholder-zinc-300"
+              />
+            </Section>
+
+            {/* 9. Good to know */}
+            <Section label="good to know">
+              <div className="flex flex-wrap gap-2">
+                {GOOD_TO_KNOW_TAGS.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => toggleTag(tag)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
+                      goodToKnow.includes(tag)
+                        ? 'bg-amber-400 border-amber-400 text-black'
+                        : 'border-zinc-200 text-zinc-500 hover:border-zinc-300'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </Section>
+
+          </div>
+        </div>
       </div>
 
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-zinc-100 shadow-xl px-6 py-4 z-50">
-        <div className="max-w-lg mx-auto space-y-2">
+        <div className="max-w-5xl mx-auto space-y-2">
           {bookingNudge && (
             <p className="text-xs text-center text-amber-600 font-medium">
               We recommend booking through Lemon - no extra cost, and you get all the benefits above.

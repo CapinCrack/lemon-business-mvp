@@ -39,7 +39,7 @@ export default async function ProfilePreviewPage({ params }: Props) {
 
       {/* Nav */}
       <header className="bg-white border-b border-zinc-200 sticky top-0 z-40">
-        <div className="max-w-lg mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center font-black text-black text-sm">L</div>
             <div className="flex items-baseline gap-1">
@@ -53,7 +53,7 @@ export default async function ProfilePreviewPage({ params }: Props) {
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-6 pt-6">
+      <div className="max-w-2xl mx-auto px-6 pt-6">
         {/* Photo header */}
         <div className="w-full h-52 rounded-2xl overflow-hidden bg-zinc-200 mb-5">
           {business.photo_urls?.length > 0 ? (
@@ -142,7 +142,7 @@ export default async function ProfilePreviewPage({ params }: Props) {
 
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-zinc-200 shadow-xl px-6 py-4 z-50">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-2xl mx-auto">
           <Link
             href={`/claim/${params.id}/edit`}
             className="block w-full bg-amber-400 hover:bg-amber-300 text-black font-bold text-center py-4 rounded-2xl transition text-sm shadow-sm"

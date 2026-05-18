@@ -42,7 +42,7 @@ export default function ValuePage({ params }: Props) {
     <main className="min-h-screen bg-white pb-28">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-zinc-100">
-        <div className="max-w-lg mx-auto px-6 h-14 flex items-center gap-4">
+        <div className="max-w-2xl mx-auto px-6 h-14 flex items-center gap-4">
           <Link href={`/claim/${params.id}/verify`} className="text-zinc-400 hover:text-zinc-700 transition-colors">
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -55,7 +55,7 @@ export default function ValuePage({ params }: Props) {
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-6 py-8">
+      <div className="max-w-2xl mx-auto px-6 py-8">
 
         {/* Hero stat */}
         <div className="bg-amber-400 rounded-3xl p-6 mb-8 text-center">
@@ -64,7 +64,7 @@ export default function ValuePage({ params }: Props) {
           <p className="text-xs text-black/60 mt-2">Based on Lemon Miami averages, Q1 2025</p>
         </div>
 
-        <div className="space-y-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {PERKS.map((perk) => (
             <div key={perk.title} className="flex gap-4 items-start p-4 rounded-2xl border border-zinc-100">
               <span className="text-2xl flex-shrink-0">{perk.icon}</span>
@@ -85,7 +85,7 @@ export default function ValuePage({ params }: Props) {
 
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-zinc-100 shadow-xl px-6 py-4 z-50">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-2xl mx-auto">
           <Link
             href={`/claim/${params.id}/checkout`}
             className="block w-full bg-amber-400 hover:bg-amber-300 text-black font-bold text-center py-4 rounded-2xl transition text-sm shadow-sm"
