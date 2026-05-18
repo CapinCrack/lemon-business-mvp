@@ -34,7 +34,7 @@ const VALUE_PROPS = [
   {
     icon: "💛",
     title: "Simple, honest pricing",
-    body: "Start with a 30-day free trial — no charge today. After that, plans start at $29/month, billed quarterly or yearly. No per-booking fees, no surprises. Cancel anytime before your trial ends.",
+    body: "Start with a 30-day free trial - no charge today. After that, plans start at $29/month, billed quarterly or yearly. No per-booking fees, no surprises. Cancel anytime before your trial ends.",
   },
 ];
 
@@ -74,11 +74,11 @@ const SHOWCASE = [
 const FAQS = [
   {
     q: "How do customers find me?",
-    a: "Lemon surfaces your business to Miami locals searching in your category. More importantly, when someone has a great experience with you, Lemon shows that reaction to their friends — turning one happy customer into ten new ones.",
+    a: "Lemon surfaces your business to Miami locals searching in your category. More importantly, when someone has a great experience with you, Lemon shows that reaction to their friends - turning one happy customer into ten new ones.",
   },
   {
     q: "What's the reaction system?",
-    a: "Instead of written reviews, customers leave one-tap emoji reactions after visiting your business. The volume of reactions generates a score out of 10 that actually means something — no fake five-star paragraphs, just honest signals from real customers.",
+    a: "Instead of written reviews, customers leave one-tap emoji reactions after visiting your business. The volume of reactions generates a score out of 10 that actually means something - no fake five-star paragraphs, just honest signals from real customers.",
   },
   {
     q: "What happens when my free trial ends?",
@@ -86,11 +86,11 @@ const FAQS = [
   },
   {
     q: "Can I control my profile?",
-    a: "Absolutely. Once verified, you control everything — photos, hours, services, pricing, and more. You can also message customers directly and manage bookings from your dashboard.",
+    a: "Absolutely. Once verified, you control everything - photos, hours, services, pricing, and more. You can also message customers directly and manage bookings from your dashboard.",
   },
   {
     q: "How is this different from Yelp or Google?",
-    a: "Yelp and Google are search engines. Lemon is a social network. When your customer loves you, their entire friend group sees it — without you spending a dollar on ads. The discovery is built into how people use the app, not bolted on.",
+    a: "Yelp and Google are search engines. Lemon is a social network. When your customer loves you, their entire friend group sees it - without you spending a dollar on ads. The discovery is built into how people use the app, not bolted on.",
   },
 ];
 
@@ -211,15 +211,17 @@ export default function Home() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
+  const midSearchRef = useRef<HTMLElement>(null);
+  const faqSearchRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const el = heroRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setStickyVisible(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    observer.observe(el);
+    const targets = [heroRef.current, midSearchRef.current, faqSearchRef.current].filter(Boolean) as Element[];
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
+      setStickyVisible(visible.size === 0);
+    }, { threshold: 0.1 });
+    targets.forEach(t => observer.observe(t));
     return () => observer.disconnect();
   }, []);
 
@@ -232,7 +234,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-zinc-900 overflow-x-hidden">
+    <main className="min-h-screen text-zinc-900 overflow-x-hidden">
 
       {/* ── NAV ── */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-zinc-100">
@@ -283,7 +285,7 @@ export default function Home() {
       <section
         id="hero"
         ref={heroRef}
-        className="relative bg-gradient-to-b from-amber-50 via-amber-50/50 to-white pt-20 pb-28 px-6 text-center"
+        className="relative bg-gradient-to-b from-amber-200/70 via-amber-50/40 to-white pt-20 pb-28 px-6 text-center"
       >
         <div className="max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white border border-amber-200 rounded-full px-4 py-1.5 text-xs font-semibold text-amber-600 tracking-wide mb-8 shadow-sm">
@@ -297,7 +299,7 @@ export default function Home() {
 
           <p className="text-zinc-500 text-lg md:text-xl leading-relaxed mb-10 max-w-xl mx-auto">
             Lemon is Miami&apos;s app for finding the best local services, places, and experiences.
-            You&apos;re already on Lemon — claim your business to rank higher, receive bookings, and earn
+            You&apos;re already on Lemon - claim your business to rank higher, receive bookings, and earn
             trust from the community.
           </p>
 
@@ -320,9 +322,9 @@ export default function Home() {
           <div className="mt-14 flex flex-col items-center gap-3">
             <div className="inline-flex items-center gap-2 bg-white border border-zinc-200 rounded-full px-4 py-2 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-black text-zinc-900 tracking-widest uppercase">Live in Miami</span>
+              <span className="text-xs font-black text-amber-600 tracking-widest uppercase">Live in Miami</span>
             </div>
-            <p className="text-6xl font-black text-zinc-900 tabular-nums leading-none">
+            <p className="text-6xl font-black text-amber-500 tabular-nums leading-none">
               <LiveCounter />
             </p>
             <p className="text-sm text-zinc-500">
@@ -336,7 +338,7 @@ export default function Home() {
       <section className="py-20 px-6">
         <div className="max-w-lg mx-auto">
           <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-10">
-            Every service business belongs on Lemon
+            Every service business belongs on <span className="text-amber-400">Lemon</span>
           </h2>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
@@ -358,7 +360,7 @@ export default function Home() {
           </div>
 
           <p className="text-center text-zinc-400 text-sm">
-            Whatever you do — if people pay for it, you belong on Lemon.
+            Whatever you do - if people pay for it, you belong on Lemon.
           </p>
         </div>
       </section>
@@ -383,11 +385,11 @@ export default function Home() {
       {/* ── 4. SOCIAL PROOF ── */}
       <section className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest text-center mb-3">
+          <p className="text-xs font-bold text-amber-500 uppercase tracking-widest text-center mb-3">
             Already on Lemon
           </p>
           <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-2">
-            Real Miami businesses, getting discovered
+            Real Miami businesses, <span className="text-amber-400">getting discovered</span>
           </h2>
           <p className="text-zinc-400 text-sm text-center mb-12">
             These spots claimed their profile. Yours is waiting.
@@ -401,10 +403,10 @@ export default function Home() {
       </section>
 
       {/* ── 5. MID-PAGE SEARCH ── */}
-      <section className="bg-zinc-50 border-y border-zinc-100 py-14 px-6">
+      <section ref={midSearchRef} className="bg-zinc-50 border-y border-zinc-100 py-14 px-6">
         <div className="max-w-2xl mx-auto">
           <p className="text-center text-sm text-zinc-500 mb-5">
-            See your business on Lemon — search to claim it.
+            See your business on Lemon - search to claim it.
           </p>
           <BusinessSearch />
         </div>
@@ -414,7 +416,7 @@ export default function Home() {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-16">
-            How Lemon works for your business
+            How <span className="text-amber-400">Lemon</span> works for your business
           </h2>
           <div className="grid md:grid-cols-3 gap-10">
             {[
@@ -431,11 +433,11 @@ export default function Home() {
               {
                 n: "03",
                 title: "One simple subscription",
-                body: "Pick the plan that fits your business — starting at $29/month. No per-booking fees. Free for the first 30 days.",
+                body: "Pick the plan that fits your business - starting at $29/month. No per-booking fees. Free for the first 30 days.",
               },
             ].map((step) => (
               <div key={step.n}>
-                <p className="text-7xl font-black text-zinc-100 leading-none mb-5 select-none">
+                <p className="text-7xl font-black text-amber-400 leading-none mb-5 select-none">
                   {step.n}
                 </p>
                 <h3 className="font-black text-zinc-900 mb-2 text-lg">{step.title}</h3>
@@ -453,7 +455,7 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
               This isn&apos;t another directory.
               <br />
-              It&apos;s word of mouth, with infrastructure.
+              It&apos;s word of mouth, with <span className="text-amber-400">infrastructure.</span>
             </h2>
             <p className="text-zinc-400 text-sm max-w-md mx-auto">
               See how Lemon turns every happy customer into your best marketing channel.
@@ -479,7 +481,7 @@ export default function Home() {
       <section className="py-20 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-black text-zinc-900 mb-5">
-            A rating system people actually trust
+            A rating system <span className="text-amber-400">people actually trust</span>
           </h2>
           <p className="text-zinc-500 leading-relaxed text-lg">
             One-tap emoji reactions. No fake paragraphs. A score out of 10 that means something because
@@ -518,14 +520,16 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Third search placement — after FAQ */}
+          {/* Third search placement - after FAQ */}
           <p className="text-center text-sm text-zinc-400 mb-5">Ready to get started?</p>
-          <BusinessSearch />
+          <section ref={faqSearchRef}>
+            <BusinessSearch />
+          </section>
         </div>
       </section>
 
       {/* ── 11. FINAL CTA + FOOTER ── */}
-      <footer className="bg-zinc-900">
+      <footer className="bg-zinc-900 pb-20">
         <div className="py-24 px-6 text-center border-b border-zinc-800">
           <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
             Your customers are already here.
@@ -574,7 +578,7 @@ export default function Home() {
         <div className="max-w-xl mx-auto">
           <button
             onClick={scrollToSearch}
-            className="w-full flex items-center gap-3 bg-zinc-50 border border-zinc-200 hover:border-amber-400 rounded-xl px-4 py-3 text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
+            className="w-full flex items-center gap-3 bg-zinc-50 border border-amber-300 hover:border-amber-500 rounded-xl px-4 py-3 text-sm text-zinc-400 hover:text-zinc-600 transition-colors"
           >
             <svg
               width="16"

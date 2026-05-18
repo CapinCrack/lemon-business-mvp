@@ -8,7 +8,7 @@ const PERKS = [
   {
     icon: '📅',
     title: 'Direct bookings',
-    body: 'Customers book and pay through Lemon — no phone tag, no no-shows.',
+    body: 'Customers book and pay through Lemon - no phone tag, no no-shows.',
   },
   {
     icon: '📣',
@@ -28,7 +28,7 @@ const PERKS = [
   {
     icon: '🎯',
     title: 'Targeted promotions',
-    body: 'Run flash deals to fill slow days — reach locals already searching for you.',
+    body: 'Run flash deals to fill slow days - reach locals already searching for you.',
   },
   {
     icon: '✅',

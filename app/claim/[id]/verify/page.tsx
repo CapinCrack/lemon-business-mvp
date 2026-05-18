@@ -16,7 +16,7 @@ const METHODS = [
       </svg>
     ),
     label: 'Verify via Google Business',
-    sub: 'Fastest — confirm you own the Google listing.',
+    sub: 'Fastest - confirm you own the Google listing.',
     recommended: true,
   },
   {
@@ -152,7 +152,7 @@ export default function VerifyPage() {
             ) : (
               <>
                 <p className="text-sm font-semibold text-zinc-500">Tap to upload</p>
-                <p className="text-xs text-zinc-400 mt-1">PDF, JPG, or PNG — max 10 MB</p>
+                <p className="text-xs text-zinc-400 mt-1">PDF, JPG, or PNG - max 10 MB</p>
               </>
             )}
           </div>

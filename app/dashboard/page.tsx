@@ -53,7 +53,7 @@ export default async function DashboardPage() {
               </p>
               {!business?.is_verified && verifications && (
                 <p className="text-xs text-zinc-400 mt-1">
-                  Verification submitted via {verifications.method} — under review
+                  Verification submitted via {verifications.method} - under review
                 </p>
               )}
             </div>
@@ -85,9 +85,9 @@ export default async function DashboardPage() {
             {/* Quick stats */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { label: 'Profile views', value: '—' },
-                { label: 'Bookings', value: '—' },
-                { label: 'Reviews', value: '—' },
+                { label: 'Profile views', value: '-' },
+                { label: 'Bookings', value: '-' },
+                { label: 'Reviews', value: '-' },
               ].map((s) => (
                 <div key={s.label} className="bg-white rounded-2xl border border-zinc-200 p-4 text-center shadow-sm">
                   <p className="text-2xl font-black text-zinc-900">{s.value}</p>

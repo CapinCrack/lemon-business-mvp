@@ -24,7 +24,7 @@ const BOOKING_OPTIONS = [
   {
     id: 'Lemon',
     label: 'Book through Lemon',
-    sub: 'Customers book directly — no friction.',
+    sub: 'Customers book directly - no friction.',
     recommended: true,
   },
   {
@@ -352,7 +352,7 @@ export default function EditProfileClient({ business }: { business: Business }) 
         <div className="max-w-lg mx-auto space-y-2">
           {bookingNudge && (
             <p className="text-xs text-center text-amber-600 font-medium">
-              We recommend booking through Lemon — no extra cost, and you get all the benefits above.
+              We recommend booking through Lemon - no extra cost, and you get all the benefits above.
             </p>
           )}
           <button

@@ -55,7 +55,7 @@ export default function CheckoutPage() {
           </Link>
           <div className="flex-1">
             <p className="text-sm font-black text-zinc-900">Choose your plan</p>
-            <p className="text-xs text-zinc-400">First 30 days free — cancel anytime.</p>
+            <p className="text-xs text-zinc-400">First 30 days free - cancel anytime.</p>
           </div>
         </div>
       </header>
