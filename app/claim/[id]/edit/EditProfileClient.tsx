@@ -64,6 +64,33 @@ interface Business {
   draft_data?: Record<string, unknown>;
 }
 
+const CATEGORY_MAP: Record<string, string> = {
+  'Fitness': 'Fitness & Wellness',
+  'Gym': 'Fitness & Wellness',
+  'Food & Drink': 'Food & Drinks',
+  'Food': 'Food & Drinks',
+  'Plumbing': 'Home Improvement',
+  'Construction': 'Home Improvement',
+  'Cleaning': 'Home Improvement',
+  'Auto Repair': 'Auto',
+  'Automotive': 'Auto',
+  'Spa': 'Beauty',
+  'Salon': 'Beauty',
+  'Tanning': 'Beauty',
+  'Nails': 'Beauty',
+};
+
+function normalizeCategory(cat: string): string {
+  if (!cat) return '';
+  if (CATEGORIES.includes(cat)) return cat;
+  return CATEGORY_MAP[cat] ?? '';
+}
+
+function sanitizeAddress(addr: string | undefined): string {
+  if (!addr || addr === 'Not Provided') return '';
+  return addr;
+}
+
 function completion(fields: string[]): number {
   const filled = fields.filter(Boolean).length;
   return Math.round((filled / fields.length) * 100);
@@ -74,9 +101,13 @@ export default function EditProfileClient({ business }: { business: Business }) 
   const draft = (business.draft_data as Record<string, unknown>) ?? {};
 
   const [name, setName] = useState<string>((draft.name as string) ?? business.name ?? '');
-  const [category, setCategory] = useState<string>((draft.category as string) ?? business.category ?? '');
+  const [category, setCategory] = useState<string>(
+    normalizeCategory((draft.category as string) ?? business.category ?? '')
+  );
   const [subcategory, setSubcategory] = useState<string>((draft.subcategory as string) ?? business.subcategory ?? '');
-  const [address, setAddress] = useState<string>((draft.address as string) ?? business.address ?? '');
+  const [address, setAddress] = useState<string>(
+    sanitizeAddress((draft.address as string) ?? business.address)
+  );
   const [price, setPrice] = useState<string>((draft.price_range as string) ?? business.price_range ?? '');
   const [booking, setBooking] = useState<string>((draft.booking_option as string) ?? business.booking_option ?? 'lemon');
   const [aboutUs, setAboutUs] = useState<string>((draft.about_us as string) ?? business.about_us ?? '');
