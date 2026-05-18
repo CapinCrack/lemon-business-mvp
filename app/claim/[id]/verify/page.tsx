@@ -103,7 +103,7 @@ export default function VerifyPage() {
 
       <div className="max-w-2xl mx-auto px-6 py-8 space-y-4">
         <p className="text-xs text-zinc-400">
-          Choose how you&apos;d like to prove you own this business. We review every claim within 24 hours.
+          Choose how you&apos;d like to prove you own this business. Verification is instant.
         </p>
 
         {METHODS.map((m) => (
@@ -185,7 +185,7 @@ export default function VerifyPage() {
           >
             {loading ? 'Submitting…' : 'Submit verification'}
           </button>
-          <p className="text-center text-xs text-zinc-400 mt-2">We review every claim within 24 hours.</p>
+          <p className="text-center text-xs text-zinc-400 mt-2">Verification is instant.</p>
         </div>
       </div>
     </main>
