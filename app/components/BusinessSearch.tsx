@@ -62,9 +62,9 @@ export default function BusinessSearch() {
   return (
     <div ref={containerRef} className="relative isolate w-full max-w-2xl mx-auto z-[60]">
       {/* Search Input Group */}
-      <div className="flex gap-2 bg-neutral-800 p-2 rounded-xl border border-neutral-700 focus-within:border-amber-400 transition-all duration-200 shadow-lg">
+      <div className="flex gap-2 bg-white p-2 rounded-xl border border-zinc-200 focus-within:border-amber-400 transition-all duration-200 shadow-sm">
         <div className="flex-1 flex items-center gap-3 px-3">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-neutral-400">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-zinc-400">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -72,12 +72,12 @@ export default function BusinessSearch() {
             placeholder="Search your business name..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent text-white placeholder-neutral-500 focus:outline-none text-base"
+            className="w-full bg-transparent text-zinc-900 placeholder-zinc-400 focus:outline-none text-base"
           />
         </div>
-        <button 
+        <button
           onClick={searchBusinesses}
-          className="bg-amber-400 hover:bg-amber-300 text-neutral-900 font-bold px-6 py-2.5 rounded-lg transition-colors duration-150 shadow-sm"
+          className="bg-amber-400 hover:bg-amber-300 text-black font-bold px-6 py-2.5 rounded-lg transition-colors duration-150 shadow-sm"
         >
           Search
         </button>
@@ -85,9 +85,9 @@ export default function BusinessSearch() {
 
       {/* Dynamic Loading Overlay */}
       {loading && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-neutral-800 border border-neutral-700 rounded-xl p-4 text-center shadow-2xl">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-zinc-200 rounded-xl p-4 text-center shadow-lg">
           <span className="inline-block w-5 h-5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mr-3 align-middle" />
-          <span className="text-sm text-neutral-400">Searching Miami registry...</span>
+          <span className="text-sm text-zinc-400">Searching Miami registry...</span>
         </div>
       )}
 
