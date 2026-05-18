@@ -1,10 +1,13 @@
-import { createClient } from '@/src/utils/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import AdminClient from './AdminClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
-  const supabase = await createClient();
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
 
   const { data: claims, error } = await supabase
     .from('claim_requests')
