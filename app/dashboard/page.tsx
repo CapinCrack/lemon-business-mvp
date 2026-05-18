@@ -1,13 +1,12 @@
 // app/dashboard/page.tsx
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/src/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardClient from './DashboardClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await createClient();
 
   // 1. Check for authenticated user
   const {

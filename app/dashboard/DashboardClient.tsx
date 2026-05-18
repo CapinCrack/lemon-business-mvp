@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createBrowserClient } from '@supabase/ssr';
 import { useRouter } from 'next/navigation';
 
 interface Business {
@@ -20,8 +20,10 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ initialBusiness, userId }: DashboardClientProps) {
-  // Correctly uses cookie-aware helper instead of custom app/supabaseClient.ts
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   const router = useRouter();
 
   const [formData, setFormData] = useState({

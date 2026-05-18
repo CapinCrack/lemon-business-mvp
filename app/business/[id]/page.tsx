@@ -7,10 +7,10 @@ interface Props {
 export default async function BusinessPage({ params }: Props) {
   const supabase = await createClient();
   const { data: claim } = await supabase
-  .from('claims')
-  .select('status')
-  .eq('business_id', params.id)
-  .maybeSingle();
+    .from('claim_requests')
+    .select('status')
+    .eq('business_id', params.id)
+    .maybeSingle();
   
   const { data, error } = await supabase
     .from('businesses')

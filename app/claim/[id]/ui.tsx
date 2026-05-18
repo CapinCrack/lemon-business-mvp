@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ClaimForm({ business }: any) {
   const [name, setName] = useState("");
@@ -8,8 +9,8 @@ export default function ClaimForm({ business }: any) {
   const [phone, setPhone] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,24 +36,13 @@ export default function ClaimForm({ business }: any) {
         return;
       }
 
-      setSuccess(true);
+      router.push("/claim/success");
     } catch (err: any) {
       setError(err?.message || "Unexpected error occurred");
     } finally {
       setLoading(false);
     }
   };
-
-  if (success) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-white bg-neutral-900">
-        <h1 className="text-3xl font-black">Claim submitted</h1>
-        <p className="text-neutral-400 mt-2">
-          We’ve received your request. It’s now pending review.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white p-6">

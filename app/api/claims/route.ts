@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { notifyAdminOfNewClaim } from '@/app/lib/email'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey =
@@ -50,6 +51,11 @@ export async function POST(request: Request) {
       .single()
 
     if (error) throw error
+
+    // Fire-and-forget — don't let email failure block the response
+    notifyAdminOfNewClaim(data).catch((err) =>
+      console.error('[claims] Admin notification failed:', err)
+    );
 
     return NextResponse.json({ success: true, claim: data }, { status: 201 })
   } catch (error: any) {
