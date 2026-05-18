@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { createClient as createServerClient } from '@/src/utils/supabase/server';
 
 export async function POST(req: Request) {
   const formData = await req.formData();
@@ -10,6 +11,11 @@ export async function POST(req: Request) {
   if (!businessId || !method) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
+
+  // Get authenticated user if present
+  const authClient = await createServerClient();
+  const { data: { session } } = await authClient.auth.getSession();
+  const userId = session?.user?.id ?? null;
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -35,6 +41,7 @@ export async function POST(req: Request) {
 
   const { error } = await supabase.from('verification_records').insert({
     business_id: businessId,
+    user_id: userId,
     method,
     status: 'pending',
     document_url: documentUrl,

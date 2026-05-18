@@ -22,25 +22,25 @@ const PRICE_OPTIONS = ['Affordable', 'Mid-Range', 'Premium'];
 
 const BOOKING_OPTIONS = [
   {
-    id: 'lemon',
+    id: 'Lemon',
     label: 'Book through Lemon',
     sub: 'Customers book directly — no friction.',
     recommended: true,
   },
   {
-    id: 'call',
+    id: 'Call',
     label: 'Call to book',
     sub: 'No booking tracking. Manual payment.',
     recommended: false,
   },
   {
-    id: 'walkin',
+    id: 'Walk-in',
     label: 'Walk-in only',
     sub: "Customers can't book ahead.",
     recommended: false,
   },
   {
-    id: 'external',
+    id: 'External',
     label: 'External booking link',
     sub: 'Customers leave Lemon to book.',
     recommended: false,
@@ -109,7 +109,7 @@ export default function EditProfileClient({ business }: { business: Business }) 
     sanitizeAddress((draft.address as string) ?? business.address)
   );
   const [price, setPrice] = useState<string>((draft.price_range as string) ?? business.price_range ?? '');
-  const [booking, setBooking] = useState<string>((draft.booking_option as string) ?? business.booking_option ?? 'lemon');
+  const [booking, setBooking] = useState<string>((draft.booking_option as string) ?? business.booking_option ?? 'Lemon');
   const [aboutUs, setAboutUs] = useState<string>((draft.about_us as string) ?? business.about_us ?? '');
   const [goodToKnow, setGoodToKnow] = useState<string[]>((draft.good_to_know as string[]) ?? business.good_to_know ?? []);
   const [hours, setHours] = useState<Record<string, string>>(
