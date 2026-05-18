@@ -34,7 +34,7 @@ export default async function ProfilePreviewPage({ params }: Props) {
     <main className="min-h-screen bg-zinc-50 pb-28">
       {/* Top banner */}
       <div className="bg-amber-400 text-black text-xs font-bold text-center py-2.5 px-4">
-        Your Lemon Profile — this is how customers see you.
+        Your Lemon Profile - this is how customers see you.
       </div>
 
       {/* Nav */}
@@ -96,7 +96,7 @@ export default async function ProfilePreviewPage({ params }: Props) {
           <p className="text-xs text-zinc-400">{reactionCount.toLocaleString()} reactions from Miami locals</p>
         </div>
 
-        {/* View count — the money stat */}
+        {/* View count - the money stat */}
         <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5 mb-5">
           <p className="text-3xl font-black text-zinc-900">{viewCount}</p>
           <p className="text-sm text-zinc-500 mt-1">

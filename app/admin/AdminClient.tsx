@@ -53,7 +53,7 @@ export default function AdminClient({ claims }: { claims: Claim[] }) {
         </h2>
 
         {pending.length === 0 ? (
-          <p className="text-zinc-500 text-sm">No pending claims — all clear.</p>
+          <p className="text-zinc-500 text-sm">No pending claims - all clear.</p>
         ) : (
           <div className="space-y-4">
             {pending.map((claim) => (
@@ -123,7 +123,7 @@ function ClaimCard({
         <div>
           <p className="text-xs text-zinc-500 uppercase tracking-wider mb-0.5">Business</p>
           <p className="text-zinc-300">
-            {claim.custom_business_name || (claim.business_id ? `ID: ${claim.business_id}` : '—')}
+            {claim.custom_business_name || (claim.business_id ? `ID: ${claim.business_id}` : '-')}
           </p>
         </div>
         {claim.custom_business_category && (
