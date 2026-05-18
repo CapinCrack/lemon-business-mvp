@@ -201,6 +201,14 @@ The `owner_id` column on `businesses` ties the claimed listing to a Supabase aut
 
 ### Spec ambiguities and the calls I made
 
+**"Saved-but-unpublished state"** - the spec didn't define exactly when draft edits go live. Below are screenshots of the same business in both states:
+
+| State A — Draft saved, pending approval | State B — Approved, live listing |
+|---|---|
+| ![Draft saved](docs/screenshots/draft-state-a-public-listing.png) | ![Live after approval](docs/screenshots/draft-state-b-public-listing.png) |
+
+State A: the owner has edited their profile in Screen 2 (edits persisted in `draft_data`), but the public `/business/[id]` page still shows the original seeded data. State B: after admin approval the `draft_data` fields are merged into the main columns and the public listing reflects the owner's edits.
+
 **"Saved-but-unpublished state"** - the spec didn't define exactly when draft edits go live. I interpreted this as: edits save immediately to `draft_data` (autosave), but the public listing only shows the merged fields after admin approval. This means an owner can see their draft in the claim flow preview but customers see the original data until verified. That's the safer product call - you don't want unverified edits showing on a public listing.
 
 **Verification methods** - the spec listed "Google Business, phone, or document." Phone verification typically means SMS OTP which needs Twilio and a sending number. I made phone a self-attestation (checkbox + phone number entry) rather than an actual OTP flow. Honest about this in the UI.
