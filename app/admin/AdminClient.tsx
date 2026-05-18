@@ -140,7 +140,7 @@ function ClaimCard({
         )}
         <div>
           <p className="text-xs text-zinc-500 uppercase tracking-wider mb-0.5">Submitted</p>
-          <p className="text-zinc-400">{new Date(claim.created_at).toLocaleDateString()}</p>
+          <p className="text-zinc-400">{new Date(claim.created_at).toLocaleDateString('en-GB')}</p>
         </div>
       </div>
 
