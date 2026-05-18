@@ -49,5 +49,23 @@ export async function POST(req: Request) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // Set owner_id on the business so the dashboard can find it
+  await supabase
+    .from('businesses')
+    .update({ owner_id: userId })
+    .eq('id', businessId);
+
+  // Write a claim_requests row so it appears in the admin panel
+  if (session) {
+    const fullName = session.user.user_metadata?.full_name ?? session.user.email ?? '';
+    await supabase.from('claim_requests').insert({
+      business_id: businessId,
+      user_id: userId,
+      owner_email: session.user.email,
+      owner_full_name: fullName,
+      status: 'pending',
+    });
+  }
+
   return NextResponse.json({ ok: true });
 }
