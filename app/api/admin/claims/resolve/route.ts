@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     if (action === 'approved' && claim.business_id) {
       const { error: bizError } = await supabase
         .from('businesses')
-        .update({ owner_id: claim.user_id, claimed: true, is_verified: true })
+        .update({ is_verified: true })
         .eq('id', claim.business_id);
       if (bizError) console.error('[admin/resolve] Business update failed:', bizError);
     }
@@ -36,8 +36,6 @@ export async function POST(req: Request) {
       const { error: insertError } = await supabase.from('businesses').insert({
         name: claim.custom_business_name,
         category: claim.custom_business_category,
-        owner_id: claim.user_id,
-        claimed: true,
         is_verified: true,
       });
       if (insertError) console.error('[admin/resolve] Business insert failed:', insertError);

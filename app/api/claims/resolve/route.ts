@@ -23,14 +23,11 @@ export async function POST(req: Request) {
 
     if (claimError) throw claimError
 
-    // 2. If business exists → assign ownership
+    // 2. If business exists → mark verified
     if (claim.business_id) {
       await supabase
         .from('businesses')
-        .update({
-          user_id: userId,
-          claimed: true,
-        })
+        .update({ is_verified: true })
         .eq('id', claim.business_id)
     }
 
@@ -39,8 +36,7 @@ export async function POST(req: Request) {
       await supabase.from('businesses').insert({
         name: claim.custom_business_name,
         category: claim.custom_business_category,
-        user_id: userId,
-        claimed: true,
+        is_verified: true,
       })
     }
 
