@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/app/supabaseClient";
 
 export default function ClaimForm({ business }: any) {
   const [name, setName] = useState("");
@@ -17,48 +16,25 @@ export default function ClaimForm({ business }: any) {
     setError("");
 
     try {
-      // 1. Check if already claimed (prevents duplicate spam early)
-      const { data: existing } = await supabase
-        .from("claims")
-        .select("*")
-        .eq("business_id", business.id)
-        .eq("email", email)
-        .maybeSingle();
+      const res = await fetch("/api/claims", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          businessId: business.id,
+          ownerFullName: name,
+          ownerEmail: email,
+        }),
+      });
 
-      if (existing) {
-        setError("This business is already claimed or pending review.");
-        setLoading(false);
+      const json = await res.json();
+
+      if (!res.ok) {
+        setError(json.error || "Failed to submit claim.");
         return;
       }
 
-      // 2. Insert claim
-      const { data, error: insertError } = await supabase
-        .from("claims")
-        .insert([
-          {
-            business_id: business.id,
-            name,
-            email,
-            status: "pending",
-          },
-        ])
-        .select()
-        .single();
-
-      // 3. HARD DEBUG OUTPUT (important)
-      if (insertError) {
-        console.error("SUPABASE INSERT ERROR:", insertError);
-        setError(insertError.message);
-        setLoading(false);
-        return;
-      }
-
-      console.log("CLAIM CREATED:", data);
-
-      // 4. Success state
       setSuccess(true);
     } catch (err: any) {
-      console.error("UNEXPECTED ERROR:", err);
       setError(err?.message || "Unexpected error occurred");
     } finally {
       setLoading(false);

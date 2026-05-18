@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       additionalNotes,
     } = body
 
-    if (!ownerFullName || !ownerEmail || !ownerPhone) {
+    if (!ownerFullName || !ownerEmail) {
       return NextResponse.json(
         { error: 'Missing core contact details.' },
         { status: 400 }
