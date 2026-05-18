@@ -143,7 +143,7 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-6 pt-24 pb-16 text-center">
         <div className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/20 rounded-full px-4 py-1.5 text-xs font-semibold text-amber-400 tracking-wider uppercase mb-8">
           <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-          Miami's Local Business Directory
+          Miami&apos;s Local Business Directory
         </div>
 
         <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.02] mb-6">
@@ -153,7 +153,7 @@ export default function Home() {
         </h1>
 
         <p className="text-neutral-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-          Claim your business free on Lemon — Miami's fastest-growing local services directory.
+          Claim your business free on Lemon — Miami&apos;s fastest-growing local services directory.
           Be found by thousands of locals searching for services just like yours.
         </p>
 
@@ -192,7 +192,7 @@ export default function Home() {
             <p className="text-xs font-mono text-amber-400 uppercase tracking-widest mb-1">Not listed yet?</p>
             <h2 className="text-xl font-black tracking-tight">Add your business in 2 minutes.</h2>
             <p className="text-sm text-neutral-400 mt-1 max-w-md">
-              We're expanding the Miami registry daily. Submit your listing and become discoverable immediately.
+              We&apos;re expanding the Miami registry daily. Submit your listing and become discoverable immediately.
             </p>
           </div>
           <button
@@ -208,7 +208,7 @@ export default function Home() {
       <section className="max-w-6xl mx-auto px-6 pb-24">
         <div className="text-center mb-10">
           <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-2">Browse by category</p>
-          <h2 className="text-3xl font-black tracking-tight">What's on Lemon</h2>
+          <h2 className="text-3xl font-black tracking-tight">What&apos;s on Lemon</h2>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -310,7 +310,7 @@ export default function Home() {
       <section id="pricing" className="max-w-6xl mx-auto px-6 py-24">
         <div className="text-center mb-14">
           <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest mb-2">Simple pricing</p>
-          <h2 className="text-3xl font-black tracking-tight">Free forever. More when you're ready.</h2>
+          <h2 className="text-3xl font-black tracking-tight">Free forever. More when you&apos;re ready.</h2>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -390,12 +390,12 @@ export default function Home() {
           <p className="text-xs font-mono text-amber-400 uppercase tracking-widest mb-3">Stay in the loop</p>
           <h2 className="text-3xl font-black tracking-tight mb-3">Be first to know</h2>
           <p className="text-neutral-400 text-sm leading-relaxed mb-8">
-            We're launching new features for Miami business owners every week. Drop your email and we'll keep you posted.
+            We&apos;re launching new features for Miami business owners every week. Drop your email and we&apos;ll keep you posted.
           </p>
 
           {waitlistDone ? (
             <div className="bg-emerald-950/40 border border-emerald-800 rounded-xl px-6 py-4">
-              <p className="text-emerald-400 font-semibold text-sm">You're on the list. We'll be in touch soon.</p>
+              <p className="text-emerald-400 font-semibold text-sm">You&apos;re on the list. We&apos;ll be in touch soon.</p>
             </div>
           ) : (
             <form

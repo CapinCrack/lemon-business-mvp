@@ -29,7 +29,7 @@ export default function TestWrapper() {
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-200">
         <h1 className="text-sm font-bold text-zinc-900 mb-2">🧪 Test Environment: Path B</h1>
-        <p className="text-xs text-zinc-500 mb-4">Simulating the "Not on Lemon yet" empty state.</p>
+        <p className="text-xs text-zinc-500 mb-4">Simulating the &quot;Not on Lemon yet&quot; empty state.</p>
         
         <ClaimModalController searchResults={[]} />
       </div>

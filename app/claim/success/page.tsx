@@ -20,7 +20,7 @@ export default function ClaimSuccessPage() {
 
       <h1 className="text-3xl font-black text-white">Claim submitted</h1>
       <p className="text-neutral-400 mt-3 max-w-sm leading-relaxed">
-        We've received your ownership request. Our team will review it and reach out to{' '}
+        We&apos;ve received your ownership request. Our team will review it and reach out to{' '}
         <span className="text-white font-medium">confirm your identity</span> within 1–2 business days.
       </p>
 
