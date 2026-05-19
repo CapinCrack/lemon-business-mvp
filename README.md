@@ -1,6 +1,8 @@
 # Lemon for Business
 
-Vendor acquisition MVP for Lemon — a Miami local services marketplace. Business owners search for their listing, claim it through a guided 6-screen flow, and submit for verification. Built to demonstrate end-to-end product thinking: landing page → search → claim → auth → verify → checkout.
+MVP for Lemon 
+Business owners search for their listing, go through a guided 6-screen flow, claim it, and then wait for verification.
+Landing page → search → claim → auth → verify → checkout.
 
 **Live site:** https://lemon-business-mvp.vercel.app
 
@@ -14,8 +16,6 @@ Full marketing page targeting Miami business owners. Sections: hero with live bu
 ### Claim flow (`/claim/[id]/*`)
 6-screen guided funnel:
 
-| Screen | Route | Description |
-|--------|-------|-------------|
 | 1 | `/claim/[id]` | Profile preview — fake view count, Lemon Score, reactions. Shows the owner what customers see. |
 | 2 | `/claim/[id]/edit` | Edit profile — 10 sections (name, category, photos, hours, address, price range, about us, good-to-know chips, booking options). Auto-saves draft to DB every 2s. Booking nudge if owner selects anything other than Lemon. |
 | 3 | `/claim/[id]/account` | Account creation — email/password via Supabase Auth. Google/Apple buttons (UI only for MVP). |
@@ -24,7 +24,7 @@ Full marketing page targeting Miami business owners. Sections: hero with live bu
 | 6 | `/claim/[id]/checkout` | Plan selection (Starter $49/mo, Growth $99/mo). Fake Stripe UI, card fields greyed out until trial ends. "Start free trial" shows success state. |
 
 ### Admin panel (`/admin`)
-Magic-link login at `/login`. Dashboard lists all pending claim requests with approve/reject actions. Approving a claim sets `is_verified = true` on the business. Protected by session check against `ADMIN_EMAIL` env var.
+Magic-link login at `/login` - unpolished. Dashboard lists all pending claim requests with approve/reject actions. Approving a claim sets `is_verified = true` on the business. Protected by session check against `ADMIN_EMAIL` env var.
 
 ### Business profile (`/business/[id]`)
 Public-facing listing page: photo, name, category, hours, address, phone, price range, about us, good-to-know tags, booking option. Claim CTA shown only if business is not yet verified.
@@ -40,7 +40,7 @@ Post-claim owner dashboard. Shows verification status, business summary, and a l
 - **Database + Auth:** Supabase (Postgres, Row Level Security, Magic Link + password auth)
 - **Storage:** Supabase Storage (`documents` bucket for verification uploads)
 - **Styling:** Tailwind CSS (light theme: white/zinc palette, amber-400 accent)
-- **Email:** Resend (`onboarding@resend.dev` — delivers only to verified Resend account email without a custom domain)
+- **Email:** Resend (`onboarding@resend.dev` - delivers only to verified Resend account email without a custom domain)
 - **Deployment:** Vercel (auto-deploy on push to `master`)
 
 ---
