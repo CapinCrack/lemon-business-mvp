@@ -21,7 +21,7 @@ const OUT = './docs/screenshots';
 mkdirSync(OUT, { recursive: true });
 
 // Business used for the draft/published demo
-const BIZ = 'e6f15a12-d197-4076-a2bc-4fb49c1d69f0';
+const BIZ = 'ce24e41c-1518-47c1-acb9-0228bbc1a8f3'; // Versailles Restaurant
 
 const state = process.argv[2]; // 'state-a' | 'state-b' | undefined
 
@@ -41,7 +41,7 @@ async function shot(name, url, scrollY = 0) {
     await page.evaluate((y) => window.scrollTo(0, y), scrollY);
     await page.waitForTimeout(400);
   }
-  await page.screenshot({ path: `${OUT}/${name}.png`, fullPage: false, timeout: 12000 });
+  await page.screenshot({ path: `${OUT}/${name}.png`, fullPage: false, timeout: 30000 });
   console.log(`  ✓ saved ${OUT}/${name}.png`);
 }
 
