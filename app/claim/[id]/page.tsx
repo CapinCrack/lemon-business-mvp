@@ -6,8 +6,7 @@ interface Props {
   params: { id: string };
 }
 
-// Deterministic view count from business ID (50–500 range)
-function fakeViewCount(id: string): number {
+function seedViewCount(id: string): number {
   let hash = 0;
   for (let i = 0; i < id.length; i++) {
     hash = (hash * 31 + id.charCodeAt(i)) & 0xffffffff;
@@ -26,7 +25,7 @@ export default async function ProfilePreviewPage({ params }: Props) {
 
   if (error || !business) notFound();
 
-  const viewCount = fakeViewCount(params.id);
+  const viewCount = seedViewCount(params.id);
   const rating = (8.5 + ((viewCount % 15) / 10)).toFixed(1);
   const reactionCount = viewCount * 3 + 47;
 

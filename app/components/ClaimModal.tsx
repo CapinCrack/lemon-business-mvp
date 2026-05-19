@@ -89,7 +89,7 @@ export default function ClaimModal({ isOpen, onClose, mode, business }: ClaimMod
         <div className="p-6 border-b border-zinc-100 flex justify-between items-center">
           <div className="text-left">
             <span className="text-xs font-black uppercase tracking-wider text-amber-500">
-              {mode === 'claim' ? 'Path A: Claim Listing' : 'Path B: New Setup'}
+              {mode === 'claim' ? 'Claim Listing' : 'New Business Setup'}
             </span>
             <h2 className="text-xl font-black text-zinc-900 mt-0.5">
               {mode === 'claim' ? `Claim ${business?.name}` : 'Add Your Business'}

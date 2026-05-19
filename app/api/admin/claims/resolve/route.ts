@@ -5,7 +5,6 @@ import { notifyClaimantOfDecision } from '@/app/lib/email';
 
 export async function POST(req: Request) {
   try {
-    // Verify the caller is the admin
     const auth = await createServerClient();
     const { data: { session } } = await auth.auth.getSession();
     if (!session || session.user.email !== process.env.ADMIN_EMAIL) {
@@ -33,7 +32,7 @@ export async function POST(req: Request) {
     if (claimError) throw claimError;
 
     if (action === 'approved' && claim.business_id) {
-      // Fetch draft_data so edits from Screen 2 go live on approval
+      // Merge any pending draft edits into the live record on approval
       const { data: biz } = await supabase
         .from('businesses')
         .select('draft_data')
@@ -69,7 +68,6 @@ export async function POST(req: Request) {
       if (insertError) console.error('[admin/resolve] Business insert failed:', insertError);
     }
 
-    // Notify the claimant of the decision
     try {
       await notifyClaimantOfDecision(claim.owner_email, claim.owner_full_name, action);
     } catch (err) {

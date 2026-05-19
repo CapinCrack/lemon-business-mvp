@@ -42,9 +42,6 @@ export async function POST(request: Request) {
           custom_business_category: customBusinessCategory || null,
           additional_notes: additionalNotes || null,
           status: 'pending',
-
-          // NEW (optional for now)
-          user_id: null,
         },
       ])
       .select()
@@ -52,7 +49,6 @@ export async function POST(request: Request) {
 
     if (error) throw error
 
-    // Fire-and-forget — don't let email failure block the response
     notifyAdminOfNewClaim(data).catch((err) =>
       console.error('[claims] Admin notification failed:', err)
     );
