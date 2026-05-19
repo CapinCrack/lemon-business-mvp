@@ -18,12 +18,16 @@ interface Business {
   is_verified?: boolean;
 }
 
-export default function BusinessSearch() {
+export default function BusinessSearch({ defaultQuery }: { defaultQuery?: string }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Business[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (defaultQuery) setQuery(defaultQuery);
+  }, [defaultQuery]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -47,7 +51,7 @@ export default function BusinessSearch() {
       const { data, error } = await supabase
         .from('businesses')
         .select('id, name, category, subcategory, neighborhood, is_verified')
-        .ilike('name', `%${query}%`)
+        .or(`name.ilike.%${query}%,category.ilike.%${query}%`)
         .limit(8);
 
       if (error) throw error;

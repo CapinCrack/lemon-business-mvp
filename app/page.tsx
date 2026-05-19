@@ -210,6 +210,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState('');
   const heroRef = useRef<HTMLElement>(null);
   const midSearchRef = useRef<HTMLElement>(null);
   const faqSearchRef = useRef<HTMLElement>(null);
@@ -231,6 +232,13 @@ export default function Home() {
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
     setTimeout(() => (el.querySelector("input") as HTMLInputElement | null)?.focus(), 600);
+  };
+
+  const handleCategoryClick = (label: string) => {
+    setCategoryFilter(label);
+    const el = document.getElementById("hero-search");
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   return (
@@ -304,7 +312,7 @@ export default function Home() {
           </p>
 
           <div id="hero-search" className="mb-3">
-            <BusinessSearch />
+            <BusinessSearch defaultQuery={categoryFilter} />
           </div>
 
           <p className="text-zinc-600 text-sm mb-4">
@@ -343,20 +351,24 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-3 mb-4">
             {CATEGORIES.map((cat) => (
-              <div
+              <button
                 key={cat.label}
-                className="bg-white border border-zinc-200 rounded-2xl px-5 py-4 flex items-center gap-3 shadow-sm hover:border-amber-300 hover:shadow-md transition cursor-default"
+                onClick={() => handleCategoryClick(cat.label)}
+                className="bg-white border border-zinc-200 rounded-2xl px-5 py-4 flex items-center gap-3 shadow-sm hover:border-amber-400 hover:shadow-md transition text-left"
               >
                 <span className="text-xl flex-shrink-0">{cat.emoji}</span>
                 <span className="font-bold text-sm text-zinc-900 leading-snug">{cat.label}</span>
-              </div>
+              </button>
             ))}
           </div>
 
           <div className="flex justify-center mb-8">
-            <span className="bg-amber-400 text-black font-bold text-sm rounded-full px-6 py-2.5">
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="bg-amber-400 hover:bg-amber-300 text-black font-bold text-sm rounded-full px-6 py-2.5 transition"
+            >
               + Yours
-            </span>
+            </button>
           </div>
 
           <p className="text-center text-zinc-400 text-sm">

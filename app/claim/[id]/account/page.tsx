@@ -163,7 +163,7 @@ export default function AccountPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Min. 8 characters"
+              placeholder="Min. 6 characters"
               className="w-full text-sm text-zinc-900 border-b border-zinc-200 focus:border-amber-400 outline-none py-2 bg-transparent placeholder-zinc-300 mt-1"
             />
           </div>

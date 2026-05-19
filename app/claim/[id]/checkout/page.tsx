@@ -34,8 +34,14 @@ export default function CheckoutPage() {
           Your 30-day free trial has started. We&apos;ll review your verification and get you live within 24 hours.
         </p>
         <Link
-          href="/"
+          href="/dashboard"
           className="bg-amber-400 hover:bg-amber-300 text-black font-bold px-8 py-4 rounded-2xl transition text-sm"
+        >
+          Check your status →
+        </Link>
+        <Link
+          href="/"
+          className="mt-4 text-sm text-zinc-400 hover:text-zinc-600 transition underline underline-offset-2"
         >
           Back to Lemon
         </Link>
