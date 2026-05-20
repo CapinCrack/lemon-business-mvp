@@ -345,7 +345,7 @@ export default function Home() {
       {/* ── 2. CATEGORY GRID ── */}
       <section className="py-20 px-6">
         <div className="max-w-lg mx-auto">
-          <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-10">
+          <h2 className="text-3xl font-black tracking-tight text-white text-center mb-10">
             Every service business belongs on <span className="text-amber-400">Lemon</span>
           </h2>
 
@@ -400,7 +400,7 @@ export default function Home() {
           <p className="text-xs font-bold text-amber-500 uppercase tracking-widest text-center mb-3">
             Already on Lemon
           </p>
-          <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-2">
+          <h2 className="text-3xl font-black tracking-tight text-white text-center mb-2">
             Real Miami businesses, <span className="text-amber-400">getting discovered</span>
           </h2>
           <p className="text-zinc-400 text-sm text-center mb-12">
@@ -427,7 +427,7 @@ export default function Home() {
       {/* ── 6. HOW LEMON WORKS ── */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-black tracking-tight text-zinc-900 text-center mb-16">
+          <h2 className="text-3xl font-black tracking-tight text-white text-center mb-16">
             How <span className="text-amber-400">Lemon</span> works for your business
           </h2>
           <div className="grid md:grid-cols-3 gap-10">
@@ -452,8 +452,8 @@ export default function Home() {
                 <p className="text-7xl font-black text-amber-400 leading-none mb-5 select-none">
                   {step.n}
                 </p>
-                <h3 className="font-black text-zinc-900 mb-2 text-lg">{step.title}</h3>
-                <p className="text-sm text-zinc-500 leading-relaxed">{step.body}</p>
+                <h3 className="font-black text-white mb-2 text-lg">{step.title}</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">{step.body}</p>
               </div>
             ))}
           </div>
@@ -492,10 +492,10 @@ export default function Home() {
       {/* ── 8. RATING SYSTEM ── */}
       <section className="py-20 px-6">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-black text-zinc-900 mb-5">
+          <h2 className="text-3xl font-black text-white mb-5">
             A rating system <span className="text-amber-400">people actually trust</span>
           </h2>
-          <p className="text-zinc-500 leading-relaxed text-lg">
+          <p className="text-zinc-300 leading-relaxed text-lg">
             One-tap emoji reactions. No fake paragraphs. A score out of 10 that means something because
             the volume of responses is massive.
           </p>
@@ -523,7 +523,7 @@ export default function Home() {
       {/* ── 10. FAQ ── */}
       <section className="py-20 px-6">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl font-black text-zinc-900 text-center mb-12">
+          <h2 className="text-3xl font-black text-white text-center mb-12">
             Your questions, answered
           </h2>
           <div className="bg-white border border-zinc-200 rounded-2xl px-8 shadow-sm mb-10">
