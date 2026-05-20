@@ -54,7 +54,7 @@ export default async function BusinessPage({ params }: Props) {
       <header className="border-b border-zinc-200 bg-white">
         <div className="max-w-3xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center font-black text-black text-base">L</div>
+            <img src="/lemon-icon.webp" alt="Lemon" className="w-7 h-7 object-contain" />
             <span className="font-black tracking-tight text-zinc-900">Lemon Miami</span>
           </Link>
           <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors">

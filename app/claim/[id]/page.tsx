@@ -40,7 +40,7 @@ export default async function ProfilePreviewPage({ params }: Props) {
       <header className="bg-white border-b border-zinc-200 sticky top-0 z-40">
         <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center font-black text-black text-sm">L</div>
+            <img src="/lemon-icon.webp" alt="Lemon" className="w-7 h-7 object-contain" />
             <div className="flex items-baseline gap-1">
               <span className="font-black text-zinc-900 tracking-tight">Lemon</span>
               <span className="text-[9px] font-black text-amber-500 tracking-widest uppercase">for business</span>
