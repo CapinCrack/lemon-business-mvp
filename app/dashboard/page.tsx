@@ -30,7 +30,7 @@ export default async function DashboardPage() {
       <header className="bg-white border-b border-zinc-200">
         <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/lemon-icon.webp" alt="Lemon" className="w-7 h-7 object-contain" />
+            <img src="/lemon-icon.png" alt="Lemon" className="w-7 h-7 object-contain" />
             <span className="font-black text-zinc-900 tracking-tight">Lemon</span>
           </Link>
           <span className="text-xs text-zinc-400">{session.user.email}</span>

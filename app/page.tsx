@@ -248,7 +248,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-zinc-100">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <img src="/lemon-icon.webp" alt="Lemon" className="w-8 h-8 object-contain" />
+            <img src="/lemon-icon.png" alt="Lemon" className="w-8 h-8 object-contain" />
             <div className="flex items-baseline gap-1.5">
               <span className="font-black text-lg tracking-tight text-zinc-900">Lemon</span>
               <span className="text-[10px] font-black text-amber-500 tracking-widest uppercase leading-none">
@@ -557,7 +557,7 @@ export default function Home() {
 
         <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
-            <img src="/lemon-icon.webp" alt="Lemon" className="w-7 h-7 object-contain" />
+            <img src="/lemon-icon.png" alt="Lemon" className="w-7 h-7 object-contain" />
             <div className="flex items-baseline gap-1.5">
               <span className="font-black text-white tracking-tight">Lemon</span>
               <span className="text-[9px] font-black text-amber-400 tracking-widest uppercase">
